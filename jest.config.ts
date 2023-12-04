@@ -7,7 +7,6 @@ const config: Config = {
     "^.+\\.tsx?$": "@swc/jest",
   },
   testEnvironment: "node",
-  rootDir: "./src",
   passWithNoTests: true,
   moduleNameMapper: compilerOptions.paths
     ? Object.entries(compilerOptions.paths).reduce(
