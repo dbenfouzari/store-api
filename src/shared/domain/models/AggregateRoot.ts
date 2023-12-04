@@ -21,7 +21,7 @@ import { Entity } from "@shared/domain/models/Entity";
  * controlling its "children" exclusively.
  */
 export abstract class AggregateRoot<T> extends Entity<T> {
-  protected constructor(props: T, id: UniqueEntityId) {
+  protected constructor(props: T, id?: UniqueEntityId) {
     super(props, id);
   }
 }
