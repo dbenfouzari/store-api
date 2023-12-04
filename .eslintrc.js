@@ -21,6 +21,7 @@ module.exports = {
       rules: {
         "jest/prefer-expect-assertions": "off",
         "jest/prefer-lowercase-title": ["error", { ignore: ["describe"] }],
+        "jest/no-hooks": "off",
       },
     },
   ],
@@ -32,6 +33,7 @@ module.exports = {
   },
   plugins: ["@typescript-eslint"],
   rules: {
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {
