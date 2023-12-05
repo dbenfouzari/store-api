@@ -8,10 +8,10 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@application/*": ["./src/application/*"],
-      "@di/*": ["./src/di/*"],
-      "@domain/*": ["./src/domain/*"],
-      "@infrastructure/*": ["./src/infrastructure/*"],
+      "@application/*": ["./src/core/application/*"],
+      "@di/*": ["./src/core/di/*"],
+      "@domain/*": ["./src/core/domain/*"],
+      "@infrastructure/*": ["./src/core/infrastructure/*"],
       "@shared/*": ["./src/shared/*"]
     },
     "types": ["reflect-metadata", "jest"],
