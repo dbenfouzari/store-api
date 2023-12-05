@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [main, develop]
 
 jobs:
-  run-linters:
-    name: Run linters
+  run-tests:
+    name: Run Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -39,5 +39,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run linters
-        run: pnpm run lint
+      - name: Run tests
+        run: pnpm run test -- --coverage
