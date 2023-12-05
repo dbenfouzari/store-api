@@ -6,8 +6,4 @@
  * It is not used to signal that something expected happened.
  * @see AppException
  */
-export class AppError extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-}
+export class AppError extends Error {}

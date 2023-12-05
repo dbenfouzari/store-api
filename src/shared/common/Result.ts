@@ -1,6 +1,9 @@
 import { ResultCannotGetErrorOfSuccess } from "@shared/domain/errors/ResultCannotGetErrorOfSuccess";
 import { ResultCannotGetValueOfFailure } from "@shared/domain/errors/ResultCannotGetValueOfFailure";
 
+export type ResultValue<T> = T extends Result<infer U, any> ? U : never;
+export type ResultError<E> = E extends Result<any, infer U> ? U : never;
+
 export class Result<T, E> {
   /** Stores the value of the result when it's successful. */
   private readonly _value: T;
@@ -32,7 +35,7 @@ export class Result<T, E> {
    * @param value The value of the result.
    * @returns A new successful result.
    */
-  public static ok<U, E>(value: U): Result<U, E> {
+  public static ok<U, E>(value: U) {
     return new Result<U, E>(value);
   }
 
@@ -41,8 +44,8 @@ export class Result<T, E> {
    * @param error The error of the result.
    * @returns A new failure result.
    */
-  public static fail<E>(error: E): Result<unknown, E> {
-    return new Result<unknown, E>(undefined, error);
+  public static fail<U, E>(error: E) {
+    return new Result<U, E>(undefined as U, error);
   }
   //#endregion
 

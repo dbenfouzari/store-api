@@ -22,5 +22,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", "dist", "jest.config.ts"],
+  "exclude": ["node_modules", "dist", "jest.config.ts"]
 }
