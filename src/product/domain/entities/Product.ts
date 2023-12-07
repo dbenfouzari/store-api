@@ -1,11 +1,13 @@
 import type { ResultError } from "@shared/common/Result";
 import type { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
+import type { ProductNameLengthError } from "product/domain/errors/ProductNameLengthError";
 
 import { Result } from "@shared/common/Result";
 import { Entity } from "@shared/domain/models/Entity";
 
 import { ProductTitle } from "../value-objects/ProductTitle";
-import { ProductVariant } from "../value-objects/ProductVariant";
+
+import { ProductVariant } from "./ProductVariant";
 
 type ProductProps = {
   name: ProductTitle;
@@ -22,7 +24,9 @@ type CreateProductProps = {
   }[];
 };
 
-type ProductFailure = ResultError<ReturnType<typeof ProductVariant.create>>;
+type ProductFailure =
+  | ResultError<ReturnType<typeof ProductVariant.create>>
+  | ProductNameLengthError;
 
 export class Product extends Entity<ProductProps> {
   private constructor(props: ProductProps, id?: UniqueEntityId) {

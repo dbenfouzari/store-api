@@ -1,4 +1,4 @@
-import { DateTime } from "@shared/domain/value-objects/DateTime";
+import { DateTime, DateTimeExceptions } from "@shared/domain/value-objects/DateTime";
 import { Duration } from "@shared/domain/value-objects/Duration";
 
 describe("dateTime", () => {
@@ -35,24 +35,23 @@ describe("dateTime", () => {
 
     it("`parse` should work", () => {
       const dateString = "2021-08-06";
-      const date = DateTime.parse(dateString);
+      const date = DateTime.parse(dateString).value;
 
       expect(date.year).toBe(2021);
       expect(date.month).toBe(8);
       expect(date.day).toBe(6);
     });
 
-    it("`parse` should throw if cannot be parsed", () => {
+    it("`parse` should fail if cannot be parsed", () => {
       const dateString = "hello testing world";
+      const date = DateTime.parse(dateString);
 
-      expect(() => {
-        DateTime.parse(dateString);
-      }).toThrow(EvalError("[DateTime] - Cannot parse string `hello testing world`"));
+      expect(date.error).toBe(DateTimeExceptions.StringCannotBeParsed);
     });
 
     it("`tryParse` should work", () => {
       const dateString = "2021-08-06";
-      const date = DateTime.tryParse(dateString);
+      const date = DateTime.tryParse(dateString).unwrap();
 
       expect(date?.year).toBe(2021);
       expect(date?.month).toBe(8);
@@ -62,11 +61,7 @@ describe("dateTime", () => {
     it("`tryParse` should not throw if cannot be parsed", () => {
       const dateString = "hello testing world";
 
-      expect(() => {
-        DateTime.tryParse(dateString);
-      }).not.toThrow();
-
-      expect(DateTime.tryParse(dateString)).toBeNull();
+      expect(DateTime.tryParse(dateString).isNone()).toBe(true);
     });
   });
 

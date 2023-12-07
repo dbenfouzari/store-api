@@ -12,7 +12,10 @@
       "@di/*": ["./src/core/di/*"],
       "@domain/*": ["./src/core/domain/*"],
       "@infrastructure/*": ["./src/core/infrastructure/*"],
-      "@shared/*": ["./src/shared/*"]
+      "@shared/*": ["./src/shared/*"],
+
+      "@cart/*": ["./src/cart/*"],
+      "product/*": ["./src/product/*"]
     },
     "types": ["reflect-metadata", "jest"],
     "resolveJsonModule": true,

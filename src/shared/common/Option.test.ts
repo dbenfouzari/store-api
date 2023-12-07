@@ -1,7 +1,25 @@
 import { None, Option, Some } from "./Option";
 
-describe("Option 3", () => {
+describe("Option", () => {
   describe("Constructors", () => {
+    it("should create a some option when value given", () => {
+      const option = Option.from("value");
+
+      expect(option).toBeInstanceOf(Some);
+    });
+
+    it("should create a none option when undefined given", () => {
+      const option = Option.from(undefined);
+
+      expect(option).toBeInstanceOf(None);
+    });
+
+    it("should create a none option when null given", () => {
+      const option = Option.from(null);
+
+      expect(option).toBeInstanceOf(None);
+    });
+
     it("should create a some option", () => {
       const option = Option.some("value");
 

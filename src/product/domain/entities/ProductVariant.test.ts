@@ -1,6 +1,4 @@
-import { ProductNameLengthError } from "../errors/ProductNameLengthError";
-
-import { ProductVariant } from "./ProductVariant";
+import { ProductVariant, ProductVariantExceptions } from "./ProductVariant";
 
 describe("Product Variant", () => {
   describe("with valid data", () => {
@@ -33,7 +31,7 @@ describe("Product Variant", () => {
         price: 2000,
       });
 
-      expect(variantResult.error).toBeInstanceOf(ProductNameLengthError);
+      expect(variantResult.error).toBe(ProductVariantExceptions.NameLength);
     });
 
     it.each`
@@ -48,7 +46,7 @@ describe("Product Variant", () => {
         price: 2000,
       });
 
-      expect(variantResult.error).toBeInstanceOf(ProductNameLengthError);
+      expect(variantResult.error).toBe(ProductVariantExceptions.NameLength);
     });
   });
 });

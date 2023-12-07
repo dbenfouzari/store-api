@@ -17,7 +17,13 @@
 
 import { v4 as uuidV4, validate } from "uuid";
 
+import { Result } from "@shared/common/Result";
+
 import { Identifier } from "./Identifier";
+
+export enum UniqueEntityIdExceptions {
+  NotValidUUID = "UniqueEntityIdNotValidUUID",
+}
 
 /**
  * Implements generation of unique identifier
@@ -32,9 +38,21 @@ export class UniqueEntityId extends Identifier<string> {
    * @param id Entity ID. If not given, one will be created and assigned.
    * @returns A unique entity ID.
    */
-  static create(id?: string) {
-    if (!id) return new UniqueEntityId(uuidV4());
-    if (validate(id)) return new UniqueEntityId(id);
-    throw new Error(`It seems like given id is not a UUID. Given: \`${id}\``);
+  static create(
+    id?: string | UniqueEntityId
+  ): Result<UniqueEntityId, UniqueEntityIdExceptions> {
+    if (!id) {
+      return Result.ok(new UniqueEntityId(uuidV4()));
+    }
+
+    if (id instanceof UniqueEntityId) {
+      return Result.ok(id);
+    }
+
+    if (validate(id)) {
+      return Result.ok(new UniqueEntityId(id));
+    }
+
+    return Result.fail(UniqueEntityIdExceptions.NotValidUUID);
   }
 }

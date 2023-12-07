@@ -42,7 +42,7 @@ export abstract class Entity<T> {
    * @param id The entity ID. If not given, one will be generated.
    */
   protected constructor(props: T, id?: UniqueEntityId) {
-    this._id = id ?? UniqueEntityId.create();
+    this._id = id ?? UniqueEntityId.create().value;
     this.props = props;
   }
 

@@ -55,14 +55,16 @@ export class Result<T, E> {
    * @param results The results to be combined.
    * @returns A new result.
    */
-  public static combine(...results: Result<any, any>[]): Result<null, any> {
+  public static combine<Args extends Result<any, any>[]>(
+    ...results: Args
+  ): Result<Args[number]["value"][], Args[number]["error"]> {
     for (const result of results) {
       if (result.isFailure) {
         return result;
       }
     }
 
-    return Result.ok(null);
+    return Result.ok(results.map((result) => result.value));
   }
   //#endregion
 

@@ -1,4 +1,11 @@
+import { Option } from "@shared/common/Option";
+import { Result } from "@shared/common/Result";
+
 import { Duration } from "./Duration";
+
+export enum DateTimeExceptions {
+  StringCannotBeParsed = "DateTimeStringCannotBeParsed",
+}
 
 /** Defines DateTime constructor arguments */
 interface DateTimeConstructorOptions {
@@ -160,10 +167,12 @@ export class DateTime {
    * @throws EvalError
    * @returns                 A new DateTime.
    */
-  static parse(formattedString: string) {
-    if (isNaN(Date.parse(formattedString)))
-      throw new EvalError(`[DateTime] - Cannot parse string \`${formattedString}\``);
-    return DateTime.fromMillisecondsSinceEpoch(Date.parse(formattedString));
+  static parse(formattedString: string): Result<DateTime, DateTimeExceptions> {
+    if (isNaN(Date.parse(formattedString))) {
+      return Result.fail(DateTimeExceptions.StringCannotBeParsed);
+    }
+
+    return Result.ok(DateTime.fromMillisecondsSinceEpoch(Date.parse(formattedString)));
   }
 
   /**
@@ -176,12 +185,11 @@ export class DateTime {
    * const badDate = DateTime.tryParse("hello") // returns null
    * @returns                 A new DateTime.
    */
-  static tryParse(formattedString: string) {
-    try {
-      return this.parse(formattedString);
-    } catch (e) {
-      return null;
-    }
+  static tryParse(formattedString: string): Option<DateTime> {
+    return this.parse(formattedString).match<Option<DateTime>>(
+      () => Option.none(),
+      (dateTime) => Option.some(dateTime)
+    );
   }
   //#endregion
 

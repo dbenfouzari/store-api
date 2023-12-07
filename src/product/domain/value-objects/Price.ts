@@ -2,11 +2,14 @@ import { Result } from "@shared/common/Result";
 import { ValueObject } from "@shared/domain/models/ValueObject";
 
 import { PriceFormat } from "../enums/PriceFormat";
-import { PriceShouldBeGreaterThanZeroError } from "../errors/PriceShouldBeGreaterThanZeroError";
 
 type PriceProps = {
   value: number;
 };
+
+export enum PriceExceptions {
+  MustBeGreaterThanZero = "PriceMustBeGreaterThanZero",
+}
 
 /**
  * A price is a value object that represents a monetary value.
@@ -25,11 +28,11 @@ export class Price extends ValueObject<PriceProps> {
    * @param price The price in cents.
    * @returns A price.
    */
-  public static create(price: number): Result<Price, PriceShouldBeGreaterThanZeroError> {
+  public static create(price: number): Result<Price, PriceExceptions> {
     const isAmountValid = this.validateAmount(price);
 
     if (!isAmountValid) {
-      return Result.fail(new PriceShouldBeGreaterThanZeroError());
+      return Result.fail(PriceExceptions.MustBeGreaterThanZero);
     }
 
     return Result.ok(new this({ value: price }));

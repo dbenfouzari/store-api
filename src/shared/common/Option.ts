@@ -23,6 +23,14 @@ export abstract class Option<T> {
   public static none<T>() {
     return new None<T>();
   }
+
+  public static from<T>(value: T | undefined | null): Option<T> {
+    if (value === undefined || value === null) {
+      return new None();
+    }
+
+    return new Some(value);
+  }
   //#endregion
 
   /**

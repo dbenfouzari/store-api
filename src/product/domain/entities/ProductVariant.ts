@@ -1,9 +1,9 @@
+import type { PriceExceptions } from "../value-objects/Price";
+
 import { Result } from "@shared/common/Result";
-import { ValueObject } from "@shared/domain/models/ValueObject";
+import { Entity } from "@shared/domain/models/Entity";
 
-import { ProductNameLengthError } from "../errors/ProductNameLengthError";
-
-import { Price } from "./Price";
+import { Price } from "../value-objects/Price";
 
 type ProductVariantProps = {
   /** The name of the product variant. */
@@ -14,7 +14,7 @@ type ProductVariantProps = {
   price: Price;
 };
 
-type CreateProductVariantProps = {
+export type CreateProductVariantProps = {
   /** The name of the product variant. */
   name: string;
   /** The description of the product variant. */
@@ -27,12 +27,16 @@ type CreateProductVariantProps = {
   price: number;
 };
 
+export enum ProductVariantExceptions {
+  NameLength = "ProductVariantNameLength",
+}
+
 /**
  * A product variant is a specific version of a product.
  *
  * For example, a product can be a t-shirt, and a product variant can be a t-shirt of size M.
  */
-export class ProductVariant extends ValueObject<ProductVariantProps> {
+export class ProductVariant extends Entity<ProductVariantProps> {
   /**
    * The constructor is private because the only way to create a product variant is by using the static factory method.
    * @param props The properties of the product variant.
@@ -48,11 +52,11 @@ export class ProductVariant extends ValueObject<ProductVariantProps> {
    */
   static create(
     props: CreateProductVariantProps
-  ): Result<ProductVariant, ProductNameLengthError> {
+  ): Result<ProductVariant, ProductVariantExceptions | PriceExceptions> {
     const isNameValid = this.validateName(props.name);
 
     if (!isNameValid) {
-      return Result.fail(new ProductNameLengthError());
+      return Result.fail(ProductVariantExceptions.NameLength);
     }
 
     const priceResult = Price.create(props.price);
