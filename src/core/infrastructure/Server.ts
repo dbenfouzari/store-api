@@ -1,10 +1,14 @@
-import type { IConfigService } from "@application/config/IConfigService";
-import type { Application } from "express";
+import { Application } from "express";
+import { inject, injectable } from "tsyringe";
 
+import { IConfigService } from "@application/config/IConfigService";
+import { DI_TOKENS } from "@infrastructure/di/tokens";
+
+@injectable()
 export class Server {
   constructor(
-    private readonly app: Application,
-    private readonly configService: IConfigService
+    @inject(DI_TOKENS.Application) private app: Application,
+    @inject(DI_TOKENS.ConfigService) private configService: IConfigService
   ) {}
 
   async start() {

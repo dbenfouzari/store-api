@@ -1,11 +1,12 @@
 import "reflect-metadata";
 
-import express from "express";
+import { container } from "tsyringe";
 
 import { Server } from "@infrastructure/Server";
-import { ConfigService } from "@infrastructure/config/ConfigService";
+import { DependencyRegistrar } from "@infrastructure/di/DependencyRegistrar";
 
-const app = express();
-const server = new Server(app, new ConfigService());
+DependencyRegistrar.registerDependencies();
+
+const server = container.resolve(Server);
 
 server.start();
