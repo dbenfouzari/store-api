@@ -1,4 +1,4 @@
-name: Lint
+name: Style review
 
 on:
   push:
@@ -7,12 +7,14 @@ on:
     branches: [main, develop]
 
 jobs:
-  run-linters:
-    name: Run linters
+  run-tests:
+    name: Check style and types
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v3
         with:
           node-version: 21
@@ -39,5 +41,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Run tests
+        run: pnpm run check:types
+
       - name: Run linters
         run: pnpm run lint
+
+      - name: Report unused
+        run: pnpm run check:unused
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
