@@ -37,6 +37,51 @@ export type CreateCartProps = {
   items?: CreateCartItemProps[];
 };
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Cart:
+ *       type: object
+ *       required:
+ *         - id
+ *         - createdAt
+ *         - updatedAt
+ *         - ownerId
+ *         - items
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The ID of the cart.
+ *           format: uuid
+ *           example: 123e4567-e89b-12d3-a456-426614174000
+ *           nullable: false
+ *           unique: true
+ *         ownerId:
+ *           type: string
+ *           description: The ID of the owner of the cart.
+ *           format: uuid
+ *           example: 123e4567-e89b-12d3-a456-426614174000
+ *           nullable: false
+ *         items:
+ *           type: array
+ *           description: The items in the cart.
+ *           items:
+ *             $ref: '#/components/schemas/CartItem'
+ *             nullable: false
+ *         createdAt:
+ *           type: string
+ *           description: The date and time the cart was created.
+ *           format: date-time
+ *           example: 2021-01-01T00:00:00.000Z
+ *           required: true
+ *         updatedAt:
+ *           type: string
+ *           description: The date and time the cart was last updated.
+ *           format: date-time
+ *           example: 2021-01-01T00:00:00.000Z
+ *           required: true
+ */
 export class Cart extends AggregateRoot<CartProps> {
   static create(
     props: CreateCartProps
@@ -123,29 +168,6 @@ export class Cart extends AggregateRoot<CartProps> {
     }
 
     this.props.items.add(cartItemResult.value);
-
-    return Result.ok(undefined);
-  }
-
-  private getExistingCartItemForProductVariant(
-    productVariant: ProductVariant
-  ): Option<CartItem> {
-    return Option.from(
-      Array.from(this.props.items).find((item) =>
-        item.props.productVariant.equals(productVariant)
-      )
-    );
-  }
-
-  private addQuantityToCartItem(
-    cartItem: CartItem,
-    quantity: number
-  ): Result<void, Error> {
-    const result = cartItem.addQuantity(quantity);
-
-    if (result.isFailure) {
-      return Result.fail(result.error);
-    }
 
     return Result.ok(undefined);
   }

@@ -22,6 +22,27 @@ export enum CartItemExceptions {
   QuantityMustBePositive = "CartItemQuantityMustBePositive",
 }
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     CartItem:
+ *       type: object
+ *       required:
+ *         - productVariant
+ *         - quantity
+ *       properties:
+ *         productVariant:
+ *           $ref: '#/components/schemas/ProductVariant'
+ *           required: true
+ *           description: The product variant.
+ *           nullable: false
+ *         quantity:
+ *           type: number
+ *           description: The quantity of the product variant.
+ *           example: 1
+ *           required: true
+ */
 export class CartItem extends Entity<CartItemProps> {
   static create(
     props: CreateCartItemProps

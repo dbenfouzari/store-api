@@ -37,7 +37,7 @@ export class DocumentationRoutes implements IAppRouterV1 {
           },
         ],
       },
-      apis: ["./src/core/infrastructure/routes/**/*.ts"],
+      apis: ["./src/**/*.ts"],
     });
 
     this.router.use(

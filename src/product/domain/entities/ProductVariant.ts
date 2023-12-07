@@ -32,6 +32,41 @@ export enum ProductVariantExceptions {
 }
 
 /**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ProductVariant:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the product variant.
+ *           example: T-Shirt
+ *           required: true
+ *           minLength: 3
+ *           maxLength: 20
+ *           nullable: false
+ *           unique: true
+ *         description:
+ *           type: string
+ *           description: The description of the product variant.
+ *           example: A t-shirt.
+ *           required: false
+ *           nullable: true
+ *           unique: false
+ *           default: null
+ *         price:
+ *           type: number
+ *           description: The price of the product variant in cents.
+ *           example: 1000
+ *           required: true
+ *           nullable: false
+ *           unique: false
+ *           default: 0
+ *           minimum: 1
+ *           maximum: 1000000000
+ */
+/**
  * A product variant is a specific version of a product.
  *
  * For example, a product can be a t-shirt, and a product variant can be a t-shirt of size M.

@@ -22,69 +22,48 @@ export class CartRoutes implements IAppRouterV1 {
   private register() {
     /**
      * @openapi
-     * /cart:
-     *   get:
-     *     summary: Get cart.
-     *     description: Get cart.
-     *     tags:
-     *       - Cart
-     *     responses:
-     *       200:
-     *         description: OK
-     */
-    this.router.get(this.basePath, (req, res) => {
-      res.send("OK from cart");
-    });
-
-    /**
-     * @openapi
-     * /cart/{id}:
-     *   get:
-     *     summary: Get cart by id.
-     *     description: Get cart by id.
-     *     tags:
-     *       - Cart
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         schema:
+     * components:
+     *   schemas:
+     *     AddItemToCartRequest:
+     *       type: object
+     *       properties:
+     *         itemId:
      *           type: string
-     *           required: true
-     *           description: Cart id.
-     *           example: 0a606f22-fb5f-4cd5-b5df-546c7fbc5ee4
+     *           description: The ID of the item to add to the cart.
      *           format: uuid
-     *     responses:
-     *       200:
-     *         description: OK
-     */
-    this.router.get(`${this.basePath}/:id`, (req, res) => {
-      res.send(`OK from cart with id ${req.params.id}`);
-    });
-
-    /**
-     * @openapi
-     * /cart:
+     *           example: 123e4567-e89b-12d3-a456-426614174000
+     *           required: true
+     *         quantity:
+     *           type: number
+     *           description: The quantity of the item to add to the cart.
+     *           example: 1
+     *           required: true
+     *           default: 1
+     *           minimum: 1
+     *           nullable: false
+     *
+     * /cart/add-item:
      *   post:
-     *     summary: Create cart.
-     *     description: Create cart.
-     *     tags:
-     *       - Cart
-     *     parameters:
-     *       - in: body
-     *         name: body
-     *         description: Cart object.
-     *         required: true
-     *         schema:
-     *           type: object
-     *           required:
-     *             - name
-     *           properties:
-     *             name:
-     *               type: string
-     *               description: Cart name.
+     *     tags: [Cart]
+     *     summary: Add an item to the cart.
+     *     description: Add a `ProductVariant` to the cart.
+     *     requestBody:
+     *       description: The request body.
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/AddItemToCartRequest'
+     *     responses:
+     *       201:
+     *         description: The item was added to the cart.
+     *         content:
+     *           application/json:
+     *             schema:
+     *               $ref: '#/components/schemas/Cart'
      */
-    this.router.post(this.basePath, (req, res) => {
-      res.send("OK from cart");
+    this.router.post(`${this.basePath}/add-item`, (req, res) => {
+      res.send("Hello World!");
     });
   }
 }
