@@ -43,7 +43,11 @@ export class DocumentationRoutes implements IAppRouterV1 {
     this.router.use(
       "/api-docs",
       swaggerUi.serve,
-      swaggerUi.setup(swaggerSpec, { explorer: true })
+      swaggerUi.setup(swaggerSpec, {
+        explorer: true,
+        customCssUrl:
+          "https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.1/themes/3.x/theme-flattop.min.css",
+      })
     );
   }
 }

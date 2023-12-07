@@ -60,5 +60,31 @@ export class CartRoutes implements IAppRouterV1 {
     this.router.get(`${this.basePath}/:id`, (req, res) => {
       res.send(`OK from cart with id ${req.params.id}`);
     });
+
+    /**
+     * @openapi
+     * /cart:
+     *   post:
+     *     summary: Create cart.
+     *     description: Create cart.
+     *     tags:
+     *       - Cart
+     *     parameters:
+     *       - in: body
+     *         name: body
+     *         description: Cart object.
+     *         required: true
+     *         schema:
+     *           type: object
+     *           required:
+     *             - name
+     *           properties:
+     *             name:
+     *               type: string
+     *               description: Cart name.
+     */
+    this.router.post(this.basePath, (req, res) => {
+      res.send("OK from cart");
+    });
   }
 }
