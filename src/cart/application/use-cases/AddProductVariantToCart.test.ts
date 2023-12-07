@@ -1,7 +1,6 @@
 import { AddProductVariantToCart } from "@cart/application/use-cases/AddProductVariantToCart";
 import { Cart } from "@cart/domain/entities/Cart";
-import { ProductVariant } from "product/domain/entities/ProductVariant";
-
+import { ProductVariant } from "@product/domain/entities/ProductVariant";
 import { Option } from "@shared/common/Option";
 
 describe("AddProductVariantToCart", () => {

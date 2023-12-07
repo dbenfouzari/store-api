@@ -15,7 +15,7 @@
       "@shared/*": ["./src/shared/*"],
 
       "@cart/*": ["./src/cart/*"],
-      "product/*": ["./src/product/*"]
+      "@product/*": ["./src/product/*"]
     },
     "types": ["reflect-metadata", "jest"],
     "resolveJsonModule": true,

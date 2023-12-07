@@ -1,6 +1,6 @@
+import type { ProductNameLengthError } from "@product/domain/errors/ProductNameLengthError";
 import type { ResultError } from "@shared/common/Result";
 import type { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
-import type { ProductNameLengthError } from "product/domain/errors/ProductNameLengthError";
 
 import { Result } from "@shared/common/Result";
 import { Entity } from "@shared/domain/models/Entity";
