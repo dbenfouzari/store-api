@@ -57,6 +57,12 @@ module.exports = {
         "newlines-between": "always",
       },
     ],
+    "jsdoc/check-tag-names": [
+      "warn",
+      {
+        definedTags: ["openapi"],
+      },
+    ],
   },
   settings: {
     "import/parsers": {
