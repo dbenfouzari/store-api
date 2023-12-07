@@ -1,11 +1,10 @@
 import type {
   CreateProductVariantProps,
   ProductVariantExceptions,
-} from "product/domain/entities/ProductVariant";
-import type { PriceExceptions } from "product/domain/value-objects/Price";
+} from "@product/domain/entities/ProductVariant";
+import type { PriceExceptions } from "@product/domain/value-objects/Price";
 
-import { ProductVariant } from "product/domain/entities/ProductVariant";
-
+import { ProductVariant } from "@product/domain/entities/ProductVariant";
 import { Result } from "@shared/common/Result";
 import { Entity } from "@shared/domain/models/Entity";
 

@@ -1,15 +1,15 @@
 import type { CreateCartItemProps, CartItemExceptions } from "./CartItem";
 import type { CartCreationDateExceptions } from "../value-objects/CartCreationDate";
 import type { CartUpdateDateExceptions } from "../value-objects/CartUpdateDate";
-import type { Either } from "@shared/common/Either";
-import type { UniqueEntityIdExceptions } from "@shared/domain/models/UniqueEntityId";
-import type { DateTimeExceptions } from "@shared/domain/value-objects/DateTime";
 import type {
   ProductVariantExceptions,
   ProductVariant,
   CreateProductVariantProps,
-} from "product/domain/entities/ProductVariant";
-import type { PriceExceptions } from "product/domain/value-objects/Price";
+} from "@product/domain/entities/ProductVariant";
+import type { PriceExceptions } from "@product/domain/value-objects/Price";
+import type { Either } from "@shared/common/Either";
+import type { UniqueEntityIdExceptions } from "@shared/domain/models/UniqueEntityId";
+import type { DateTimeExceptions } from "@shared/domain/value-objects/DateTime";
 
 import { Left, Right } from "@shared/common/Either";
 import { Option } from "@shared/common/Option";
