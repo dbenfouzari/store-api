@@ -56,6 +56,7 @@ export class InMemoryUserReadRepository implements IUserReadRepository {
     const user = [...this._users.values()].find((user) =>
       user.props.email.equals(emailValue)
     );
+
     return Result.ok(Option.from(user));
   }
 

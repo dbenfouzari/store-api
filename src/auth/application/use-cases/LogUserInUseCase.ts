@@ -2,7 +2,7 @@ import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
 
-import { IJWTService } from "@auth/application/services/IJWTService";
+import { IJWTService, TokenType } from "@auth/application/services/IJWTService";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
 import { AUTH_TOKENS } from "@auth/di/tokens";
 import { Result } from "@shared/common/Result";
@@ -30,7 +30,7 @@ export class LogUserInUseCase
     @inject(AUTH_TOKENS.UserReadRepository)
     private readonly userReadRepository: IUserReadRepository,
     @inject(AUTH_TOKENS.JWTService)
-    private readonly jwtService: IJWTService<{ email: string }>
+    private readonly jwtService: IJWTService
   ) {}
 
   async execute(
@@ -47,15 +47,25 @@ export class LogUserInUseCase
               return Result.fail(LogUserInException.InvalidPassword);
             }
 
-            console.log(
-              this.jwtService.sign({
+            const accessToken = this.jwtService.sign(
+              {
                 email: user.props.email.props.value,
-              })
+                sub: user.id.toString(),
+              },
+              TokenType.AccessToken
+            );
+
+            const refreshToken = this.jwtService.sign(
+              {
+                email: user.props.email.props.value,
+                sub: user.id.toString(),
+              },
+              TokenType.RefreshToken
             );
 
             return Result.ok({
-              accessToken: "access-token",
-              refreshToken: "refresh-token",
+              accessToken: accessToken,
+              refreshToken: refreshToken,
             });
           },
           () => Result.fail(LogUserInException.UserNotFound)

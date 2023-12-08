@@ -126,7 +126,7 @@ export class GetMeRoute {
   private router = Router();
 
   constructor(
-    @inject(AUTH_TOKENS.JWTService) private jwtService: IJWTService<any>,
+    @inject(AUTH_TOKENS.JWTService) private jwtService: IJWTService,
     @inject(AUTH_TOKENS.GetMeUseCase) private getMeUseCase: GetMeUseCase
   ) {}
 
@@ -137,8 +137,6 @@ export class GetMeRoute {
       ensureUserIsAuthenticated,
       async (req, res: Response<GetMeResponse>) => {
         const user = req.user;
-
-        console.log({ user });
 
         if (!user) {
           return res.status(401).json({

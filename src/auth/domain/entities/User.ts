@@ -36,12 +36,17 @@
  *           nullable: false
  */
 
+import type { IJWTService } from "@auth/application/services/IJWTService";
 import type { EmailExceptions } from "@auth/domain/value-objects/Email";
 import type { FirstNameExceptions } from "@auth/domain/value-objects/FirstName";
 import type { LastNameExceptions } from "@auth/domain/value-objects/LastName";
 import type { PasswordExceptions } from "@auth/domain/value-objects/Password";
 import type { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 
+import { container } from "tsyringe";
+
+import { TokenType } from "@auth/application/services/IJWTService";
+import { AUTH_TOKENS } from "@auth/di/tokens";
 import { Email } from "@auth/domain/value-objects/Email";
 import { FirstName } from "@auth/domain/value-objects/FirstName";
 import { LastName } from "@auth/domain/value-objects/LastName";
@@ -65,10 +70,19 @@ export type CreateUserProps = {
 
 export class User extends Entity<UserProps> {
   private _password: Password;
+  public _refreshToken: string;
 
   private constructor(props: UserProps & { password: Password }, id?: UniqueEntityId) {
     super(props, id);
+    const jwtService = container.resolve<IJWTService>(AUTH_TOKENS.JWTService);
 
+    this._refreshToken = jwtService.sign(
+      {
+        email: props.email.props.value,
+        sub: this.id.toString(),
+      },
+      TokenType.RefreshToken
+    );
     this._password = props.password;
   }
 

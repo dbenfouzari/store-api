@@ -10,7 +10,7 @@ import { AUTH_TOKENS } from "@auth/di/tokens";
 /**
  * @openapi
  * components:
- *   schemas:
+ *   requestBodies:
  *     LogUserInRequest:
  *       type: object
  *       properties:
@@ -156,7 +156,7 @@ type LogUserInResponse =
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/components/schemas/LogUserInRequest"
+ *             $ref: "#/components/requestBodies/LogUserInRequest"
  *     responses:
  *       200:
  *         $ref: "#/components/responses/LogUserInResponse"

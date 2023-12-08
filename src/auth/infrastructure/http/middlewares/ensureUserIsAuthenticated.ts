@@ -3,10 +3,11 @@ import type { RequestHandler } from "express";
 
 import { container } from "tsyringe";
 
+import { TokenType } from "@auth/application/services/IJWTService";
 import { AUTH_TOKENS } from "@auth/di/tokens";
 
 export const ensureUserIsAuthenticated: RequestHandler = (req, res, next) => {
-  const jwtService = container.resolve<IJWTService<any>>(AUTH_TOKENS.JWTService);
+  const jwtService = container.resolve<IJWTService>(AUTH_TOKENS.JWTService);
 
   const authHeader = req.headers.authorization;
 
@@ -19,7 +20,7 @@ export const ensureUserIsAuthenticated: RequestHandler = (req, res, next) => {
 
   const [, token] = authHeader.split(" ");
 
-  const verifiedToken = jwtService.verify(token);
+  const verifiedToken = jwtService.verify(token, TokenType.AccessToken);
 
   return verifiedToken.match(
     () => {

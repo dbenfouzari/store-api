@@ -32,7 +32,7 @@ export type AddItemToCartResponse =
 /**
  * @openapi
  * components:
- *   schemas:
+ *   requestBodies:
  *     AddItemToCartRequest:
  *       type: object
  *       properties:
@@ -51,6 +51,8 @@ export type AddItemToCartResponse =
  *
  * /cart/add-item:
  *   post:
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Cart]
  *     summary: Add an item to the cart.
  *     description: |
@@ -60,7 +62,7 @@ export type AddItemToCartResponse =
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AddItemToCartRequest'
+ *             $ref: '#/components/requestBodies/AddItemToCartRequest'
  *     responses:
  *       201:
  *         description: The item was added to the cart.

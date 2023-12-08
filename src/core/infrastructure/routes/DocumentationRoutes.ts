@@ -57,7 +57,7 @@ export class DocumentationRoutes implements IAppRouterV1 {
     const swaggerSpec = swaggerJSDoc({
       failOnErrors: true,
       definition: {
-        openapi: "3.0.0",
+        openapi: "3.1.0",
         info: {
           title: "API Documentation",
           version: "1.0.0",

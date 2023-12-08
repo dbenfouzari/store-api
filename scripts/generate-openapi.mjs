@@ -40,8 +40,6 @@ async function main() {
         } else {
           const resYaml = await data.text();
           const doc = YAML.stringify(YAML.parse(resYaml));
-          console.log(doc);
-
           ensureDirectoryExistence(outputPath);
           fs.writeFileSync(outputPath, doc, "utf8");
         }

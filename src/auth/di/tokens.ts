@@ -7,4 +7,6 @@ export enum AUTH_TOKENS {
   JWTService = "AuthTokens.JWTService",
   GetMeUseCase = "AuthTokens.GetMeUseCase",
   GetMeRoute = "AuthTokens.GetMeRoute",
+  RefreshUserTokenUseCase = "AuthTokens.RefreshUserTokenUseCase",
+  RefreshUserTokenRoute = "AuthTokens.RefreshUserTokenRoute",
 }

@@ -3,11 +3,13 @@ import type DependencyContainer from "tsyringe/dist/typings/types/dependency-con
 import { GetAllUsers } from "@auth/application/use-cases/GetAllUsers";
 import { GetMeUseCase } from "@auth/application/use-cases/GetMeUseCase";
 import { LogUserInUseCase } from "@auth/application/use-cases/LogUserInUseCase";
+import { RefreshUserTokenUseCase } from "@auth/application/use-cases/RefreshUserTokenUseCase";
 import { AUTH_TOKENS } from "@auth/di/tokens";
 import { AuthRoutes } from "@auth/infrastructure/http/routes";
 import { GetMeRoute } from "@auth/infrastructure/http/routes/GetMeRoute";
 import { GetUsersRoute } from "@auth/infrastructure/http/routes/GetUsersRoute";
 import { LogUserInRoute } from "@auth/infrastructure/http/routes/LogUserInRoute";
+import { RefreshUserTokenRoute } from "@auth/infrastructure/http/routes/RefreshUserTokenRoute";
 import { InMemoryUserReadRepository } from "@auth/infrastructure/services/InMemoryUserReadRepository";
 import { JWTService } from "@auth/infrastructure/services/JWTService";
 import { DI_TOKENS } from "@infrastructure/di/tokens";
@@ -32,6 +34,9 @@ export class AuthDependencyRegistrar {
     this.container.register(AUTH_TOKENS.GetMeUseCase, {
       useClass: GetMeUseCase,
     });
+    this.container.register(AUTH_TOKENS.RefreshUserTokenUseCase, {
+      useClass: RefreshUserTokenUseCase,
+    });
 
     // Register routes
     this.container.register(DI_TOKENS.AppRouterV1, { useClass: AuthRoutes });
@@ -43,6 +48,9 @@ export class AuthDependencyRegistrar {
     });
     this.container.register(AUTH_TOKENS.GetMeRoute, {
       useClass: GetMeRoute,
+    });
+    this.container.register(AUTH_TOKENS.RefreshUserTokenRoute, {
+      useClass: RefreshUserTokenRoute,
     });
   }
 }
