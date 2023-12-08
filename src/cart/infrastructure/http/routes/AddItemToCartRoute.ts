@@ -41,12 +41,10 @@ export type AddItemToCartResponse =
  *           description: The ID of the item to add to the cart.
  *           format: uuid
  *           example: 123e4567-e89b-12d3-a456-426614174000
- *           required: true
  *         quantity:
  *           type: number
  *           description: The quantity of the item to add to the cart.
  *           example: 1
- *           required: true
  *           default: 1
  *           minimum: 1
  *           nullable: false
@@ -59,7 +57,6 @@ export type AddItemToCartResponse =
  *       Add a `ProductVariant` to the cart.
  *     requestBody:
  *       description: The request body.
- *       required: true
  *       content:
  *         application/json:
  *           schema:

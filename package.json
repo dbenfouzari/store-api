@@ -10,7 +10,9 @@
     "check:types": "tsc --noEmit",
     "check:unused": "knip --config knip.config.json",
     "start:dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "start:dev:watch": "ts-node-dev -r tsconfig-paths/register src/index.ts"
+    "start:dev:watch": "ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "generate:docs:json": "node scripts/generate-openapi.mjs --json --output docs/swagger.json",
+    "generate:docs:yaml": "node scripts/generate-openapi.mjs --yaml --output docs/swagger.yaml"
   },
   "keywords": [],
   "author": "",
@@ -48,11 +50,14 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "minimist": "^1.2.8",
+    "node-fetch": "^3.3.2",
     "product": "^1.2.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "tsyringe": "^4.8.0",
     "uuid": "^9.0.1",
+    "yaml": "^2.3.4",
     "zod": "^3.22.4"
   }
 }

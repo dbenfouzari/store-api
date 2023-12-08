@@ -1,3 +1,41 @@
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - id
+ *         - firstName
+ *         - lastName
+ *         - email
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The ID of the user.
+ *           format: uuid
+ *           example: 123e4567-e89b-12d3-a456-426614174000
+ *           nullable: false
+ *         firstName:
+ *           type: string
+ *           description: The first name of the user.
+ *           example: John
+ *           nullable: false
+ *           minLength: 2
+ *         lastName:
+ *           type: string
+ *           description: The last name of the user.
+ *           example: Doe
+ *           nullable: false
+ *           minLength: 2
+ *         email:
+ *           type: string
+ *           description: The email of the user.
+ *           format: email
+ *           example: john@doe.com
+ *           nullable: false
+ */
+
 import type { EmailExceptions } from "@auth/domain/value-objects/Email";
 import type { FirstNameExceptions } from "@auth/domain/value-objects/FirstName";
 import type { LastNameExceptions } from "@auth/domain/value-objects/LastName";
@@ -31,6 +69,22 @@ export class User extends Entity<UserProps> {
     super(props, id);
 
     this._password = props.password;
+  }
+
+  public get id() {
+    return this._id;
+  }
+
+  public get email() {
+    return this.props.email.props.value;
+  }
+
+  public get firstName() {
+    return this.props.firstName.props.value;
+  }
+
+  public get lastName() {
+    return this.props.lastName.props.value;
   }
 
   static create(

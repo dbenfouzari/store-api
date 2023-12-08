@@ -1,4 +1,6 @@
 export enum AUTH_TOKENS {
   UserReadRepository = "AuthTokens.UserReadRepository",
-  GetUserByEmail = "AuthTokens.GetUserByEmail",
+  GetUserByEmailUseCase = "AuthTokens.GetUserByEmailUseCase",
+  GetAllUsersUseCase = "AuthTokens.GetAllUsersUseCase",
+  GetUsersRoute = "AuthTokens.GetUsersRoute",
 }
