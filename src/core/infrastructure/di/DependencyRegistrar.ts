@@ -4,6 +4,7 @@ import type { Application } from "express";
 import express from "express";
 import { container } from "tsyringe";
 
+import { AuthDependencyRegistrar } from "@auth/di/AuthDependencyRegistrar";
 import { CartDependencyRegistrar } from "@cart/di/CartDependencyRegistrar";
 import { ConfigService } from "@infrastructure/config/ConfigService";
 import { DI_TOKENS } from "@infrastructure/di/tokens";
@@ -30,5 +31,9 @@ export class DependencyRegistrar {
     // Cart dependencies
     const cartDependencyRegistrar = new CartDependencyRegistrar(container);
     cartDependencyRegistrar.registerDependencies();
+
+    // Auth dependencies
+    const authDependencyRegistrar = new AuthDependencyRegistrar(container);
+    authDependencyRegistrar.registerDependencies();
   }
 }
