@@ -36,8 +36,6 @@ export class InMemoryUserReadRepository implements IUserReadRepository {
       u.props.email.equals(emailResult.value)
     );
 
-    console.log(user);
-
     const exists = user !== undefined;
     return Promise.resolve(Result.ok(exists));
   }

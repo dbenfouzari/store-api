@@ -5,6 +5,7 @@ import { inject, injectable } from "tsyringe";
 
 import { AUTH_TOKENS } from "@auth/di/tokens";
 import { GetUsersRoute } from "@auth/infrastructure/http/routes/GetUsersRoute";
+import { LogUserInRoute } from "@auth/infrastructure/http/routes/LogUserInRoute";
 
 /**
  * @openapi
@@ -48,12 +49,14 @@ export class AuthRoutes implements IAppRouterV1 {
 
   constructor(
     @inject(AUTH_TOKENS.GetUsersRoute)
-    private getUsersRoute: GetUsersRoute
+    private getUsersRoute: GetUsersRoute,
+    @inject(AUTH_TOKENS.LogUserInRoute) private logUserInRoute: LogUserInRoute
   ) {
     this.register();
   }
 
   private register() {
     this.router.use(this.getUsersRoute.register());
+    this.router.use(this.logUserInRoute.register());
   }
 }

@@ -53,6 +53,7 @@ type UserProps = {
   firstName: FirstName;
   lastName: LastName;
   email: Email;
+  password: Password;
 };
 
 export type CreateUserProps = {
