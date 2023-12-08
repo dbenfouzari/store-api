@@ -32,7 +32,7 @@ export type AddItemToCartResponse =
 /**
  * @openapi
  * components:
- *   schemas:
+ *   requestBodies:
  *     AddItemToCartRequest:
  *       type: object
  *       properties:
@@ -41,29 +41,28 @@ export type AddItemToCartResponse =
  *           description: The ID of the item to add to the cart.
  *           format: uuid
  *           example: 123e4567-e89b-12d3-a456-426614174000
- *           required: true
  *         quantity:
  *           type: number
  *           description: The quantity of the item to add to the cart.
  *           example: 1
- *           required: true
  *           default: 1
  *           minimum: 1
  *           nullable: false
  *
  * /cart/add-item:
  *   post:
+ *     security:
+ *       - BearerAuth: []
  *     tags: [Cart]
  *     summary: Add an item to the cart.
  *     description: |
  *       Add a `ProductVariant` to the cart.
  *     requestBody:
  *       description: The request body.
- *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/AddItemToCartRequest'
+ *             $ref: '#/components/requestBodies/AddItemToCartRequest'
  *     responses:
  *       201:
  *         description: The item was added to the cart.

@@ -56,7 +56,6 @@ export type CreateCartProps = {
  *           format: uuid
  *           example: 123e4567-e89b-12d3-a456-426614174000
  *           nullable: false
- *           unique: true
  *         ownerId:
  *           type: string
  *           description: The ID of the owner of the cart.
@@ -74,13 +73,11 @@ export type CreateCartProps = {
  *           description: The date and time the cart was created.
  *           format: date-time
  *           example: 2021-01-01T00:00:00.000Z
- *           required: true
  *         updatedAt:
  *           type: string
  *           description: The date and time the cart was last updated.
  *           format: date-time
  *           example: 2021-01-01T00:00:00.000Z
- *           required: true
  */
 export class Cart extends AggregateRoot<CartProps> {
   static create(
