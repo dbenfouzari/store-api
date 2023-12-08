@@ -14,6 +14,7 @@
       "@infrastructure/*": ["./src/core/infrastructure/*"],
       "@shared/*": ["./src/shared/*"],
 
+      "@auth/*": ["./src/auth/*"],
       "@cart/*": ["./src/cart/*"],
       "@product/*": ["./src/product/*"]
     },
