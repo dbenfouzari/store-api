@@ -13,7 +13,9 @@ import { RefreshUserTokenRoute } from "@auth/infrastructure/http/routes/RefreshU
  * tags:
  *   - name: Auth
  *     description: |
- *       `Auth` operations.
+ *       `Authentication` operations.
+ *
+ *       User can log in, log out, refresh token, etc.
  *   - name: User
  *     description: |
  *       `User` operations.
