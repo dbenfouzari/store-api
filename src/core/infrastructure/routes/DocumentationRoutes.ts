@@ -12,6 +12,11 @@ import { DI_TOKENS } from "@infrastructure/di/tokens";
 /**
  * @openapi
  * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  *   responses:
  *     UnexpectedErrorResponse:
  *       description: An unexpected error occurred.

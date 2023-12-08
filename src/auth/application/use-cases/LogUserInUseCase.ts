@@ -2,6 +2,7 @@ import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
 
+import { IJWTService } from "@auth/application/services/IJWTService";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
 import { AUTH_TOKENS } from "@auth/di/tokens";
 import { Result } from "@shared/common/Result";
@@ -27,7 +28,9 @@ export class LogUserInUseCase
 {
   constructor(
     @inject(AUTH_TOKENS.UserReadRepository)
-    private readonly userReadRepository: IUserReadRepository
+    private readonly userReadRepository: IUserReadRepository,
+    @inject(AUTH_TOKENS.JWTService)
+    private readonly jwtService: IJWTService<{ email: string }>
   ) {}
 
   async execute(
@@ -43,6 +46,12 @@ export class LogUserInUseCase
             if (user.props.password.props.value !== request.password) {
               return Result.fail(LogUserInException.InvalidPassword);
             }
+
+            console.log(
+              this.jwtService.sign({
+                email: user.props.email.props.value,
+              })
+            );
 
             return Result.ok({
               accessToken: "access-token",

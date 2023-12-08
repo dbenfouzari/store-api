@@ -4,4 +4,7 @@ export enum AUTH_TOKENS {
   LogUserInRoute = "AuthTokens.LogUserInRoute",
   GetAllUsersUseCase = "AuthTokens.GetAllUsersUseCase",
   GetUsersRoute = "AuthTokens.GetUsersRoute",
+  JWTService = "AuthTokens.JWTService",
+  GetMeUseCase = "AuthTokens.GetMeUseCase",
+  GetMeRoute = "AuthTokens.GetMeRoute",
 }

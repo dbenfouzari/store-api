@@ -4,6 +4,7 @@ import { Router } from "express";
 import { inject, injectable } from "tsyringe";
 
 import { AUTH_TOKENS } from "@auth/di/tokens";
+import { GetMeRoute } from "@auth/infrastructure/http/routes/GetMeRoute";
 import { GetUsersRoute } from "@auth/infrastructure/http/routes/GetUsersRoute";
 import { LogUserInRoute } from "@auth/infrastructure/http/routes/LogUserInRoute";
 
@@ -50,7 +51,8 @@ export class AuthRoutes implements IAppRouterV1 {
   constructor(
     @inject(AUTH_TOKENS.GetUsersRoute)
     private getUsersRoute: GetUsersRoute,
-    @inject(AUTH_TOKENS.LogUserInRoute) private logUserInRoute: LogUserInRoute
+    @inject(AUTH_TOKENS.LogUserInRoute) private logUserInRoute: LogUserInRoute,
+    @inject(AUTH_TOKENS.GetMeRoute) private getMeRoute: GetMeRoute
   ) {
     this.register();
   }
@@ -58,5 +60,6 @@ export class AuthRoutes implements IAppRouterV1 {
   private register() {
     this.router.use(this.getUsersRoute.register());
     this.router.use(this.logUserInRoute.register());
+    this.router.use(this.getMeRoute.register());
   }
 }
