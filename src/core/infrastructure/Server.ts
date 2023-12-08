@@ -1,6 +1,6 @@
 import type { IAppRouterV1 } from "@application/routes/IAppRouterV1";
 
-import { Application } from "express";
+import express, { Application } from "express";
 import { inject, injectable, injectAll } from "tsyringe";
 
 import { IConfigService } from "@application/config/IConfigService";
@@ -17,6 +17,9 @@ export class Server {
   async start() {
     const port = this.configService.get("PORT");
     const host = this.configService.get("HOST");
+
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
 
     this.appRouterV1s.forEach((routerV1) => {
       this.app.use("/api/v1", routerV1.router);

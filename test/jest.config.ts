@@ -1,11 +1,23 @@
 import type { Config } from "jest";
 
-import { compilerOptions } from "./tsconfig.json";
+import { compilerOptions } from "../tsconfig.json";
 
 const config: Config = {
   transform: {
-    "^.+\\.tsx?$": "@swc/jest",
+    "^.+\\.tsx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+            decorators: true,
+          },
+        },
+      },
+    ],
   },
+  rootDir: "../",
+  setupFilesAfterEnv: ["<rootDir>/test/jest.setup.ts"],
   testEnvironment: "node",
   passWithNoTests: true,
   moduleNameMapper: compilerOptions.paths
