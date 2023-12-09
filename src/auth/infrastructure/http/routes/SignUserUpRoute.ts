@@ -36,7 +36,7 @@ import { AuthUseCasesTokens } from "@auth/di/tokens";
  *               password:
  *                 type: string
  *                 description: The password of the user to be signed up.
- *                 example: 123456
+ *                 example: myComplexPassword123!
  *                 nullable: false
  *                 minLength: 8
  *                 pattern: ^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$ # Must have at least one number, one uppercase letter, one lowercase letter and one special character

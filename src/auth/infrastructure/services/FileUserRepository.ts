@@ -18,7 +18,7 @@ type UserJson = {
   lastName: string;
   email: string;
   password: string;
-  refreshToken: string;
+  refreshToken?: string;
 };
 
 /**
@@ -44,11 +44,11 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
 
   createUser(user: User): Promise<Result<User, Error>> {
     const users = this.readFile();
-    users.add(user);
+    const nextUsers = [...users, user];
 
     fs.writeFileSync(
       this.filePath,
-      JSON.stringify([...users.values()].map(mapUserToData), null, 2)
+      JSON.stringify(nextUsers.map(mapUserToData), null, 2)
     );
     return Promise.resolve(Result.ok(user));
   }
@@ -61,7 +61,7 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
     return Promise.resolve(Result.ok(exists));
   }
 
-  getAllUsers(): Promise<Set<User>> {
+  getAllUsers(): Promise<User[]> {
     const users = this.readFile();
     return Promise.resolve(users);
   }
@@ -79,7 +79,7 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
 
   getUserById(id: string): Promise<Option<User>> {
     const users = this.readFile();
-    const user = [...users.values()].find((u) => u.id.toString() === id);
+    const user = users.find((u) => u.id.toString() === id);
 
     if (user === undefined) {
       return Promise.resolve(Option.none());
@@ -88,10 +88,10 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
     return Promise.resolve(Option.some(user));
   }
 
-  private readFile(): Set<User> {
+  private readFile(): User[] {
     const file = fs.readFileSync(this.filePath, { encoding: "utf-8" });
     const usersJson = JSON.parse(file) as UserJson[];
-    const users = usersJson.map((user) => {
+    return usersJson.map((user) => {
       return User.create(
         {
           firstName: user.firstName,
@@ -103,7 +103,24 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
         UniqueEntityId.create(user.id).value
       ).value;
     });
+  }
 
-    return new Set(users);
+  updateUser(user: User): Promise<Result<User, Error>> {
+    const users = this.readFile();
+
+    const nextUsers = users.map((u) => {
+      if (u.id.toString() === user.id.toString()) {
+        return user;
+      }
+
+      return u;
+    });
+
+    fs.writeFileSync(
+      this.filePath,
+      JSON.stringify(nextUsers.map(mapUserToData), null, 2)
+    );
+
+    return Promise.resolve(Result.ok(user));
   }
 }

@@ -70,7 +70,7 @@ export class SignUserUpUseCase
     const { accessToken, refreshToken } = this.generateTokens(
       userResult.value.id.toString(),
       userResult.value.email,
-      userResult.value.props.refreshToken
+      userResult.value.props.refreshToken ?? ""
     );
 
     // Save the user and the refresh token to the database

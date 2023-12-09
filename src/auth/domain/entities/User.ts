@@ -54,7 +54,7 @@ type UserProps = {
   lastName: LastName;
   email: Email;
   password: Password;
-  refreshToken: string;
+  refreshToken?: string;
 };
 
 export type CreateUserProps = {
@@ -62,7 +62,7 @@ export type CreateUserProps = {
   lastName: string;
   email: string;
   password: string;
-  refreshToken: string;
+  refreshToken?: string;
 };
 
 export class User extends Entity<UserProps> {
@@ -117,5 +117,13 @@ export class User extends Entity<UserProps> {
         id
       )
     );
+  }
+
+  public logOut() {
+    this.props.refreshToken = undefined;
+  }
+
+  public logIn(refreshToken: string) {
+    this.props.refreshToken = refreshToken;
   }
 }

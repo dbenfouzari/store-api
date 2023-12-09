@@ -4,6 +4,7 @@ import { inject, injectable } from "tsyringe";
 
 import { IJWTService, TokenType } from "@auth/application/services/IJWTService";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
+import { IUserWriteRepository } from "@auth/application/services/IUserWriteRepository";
 import { AuthServicesTokens } from "@auth/di/tokens";
 import { Result } from "@shared/common/Result";
 
@@ -29,6 +30,8 @@ export class LogUserInUseCase
   constructor(
     @inject(AuthServicesTokens.UserReadRepository)
     private readonly userReadRepository: IUserReadRepository,
+    @inject(AuthServicesTokens.UserWriteRepository)
+    private readonly userWriteRepository: IUserWriteRepository,
     @inject(AuthServicesTokens.JWTService)
     private readonly jwtService: IJWTService
   ) {}
@@ -62,6 +65,10 @@ export class LogUserInUseCase
               },
               TokenType.RefreshToken
             );
+
+            user.logIn(refreshToken);
+
+            this.userWriteRepository.updateUser(user);
 
             return Result.ok({
               accessToken: accessToken,
