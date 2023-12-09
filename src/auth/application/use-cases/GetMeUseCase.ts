@@ -5,7 +5,7 @@ import { inject, injectable } from "tsyringe";
 
 import { IJWTService, TokenType } from "@auth/application/services/IJWTService";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
-import { AUTH_TOKENS } from "@auth/di/tokens";
+import { AuthServicesTokens } from "@auth/di/tokens";
 import { Result } from "@shared/common/Result";
 
 type GetMeRequest = {
@@ -21,9 +21,9 @@ enum GetMeException {
 @injectable()
 export class GetMeUseCase implements IUseCase<GetMeRequest, GetMeResponse> {
   constructor(
-    @inject(AUTH_TOKENS.UserReadRepository)
+    @inject(AuthServicesTokens.UserReadRepository)
     private readonly userReadRepository: IUserReadRepository,
-    @inject(AUTH_TOKENS.JWTService)
+    @inject(AuthServicesTokens.JWTService)
     private readonly jwtService: IJWTService
   ) {}
 

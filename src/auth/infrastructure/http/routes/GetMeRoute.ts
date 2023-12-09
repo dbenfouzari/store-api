@@ -3,9 +3,8 @@ import type { Response } from "express";
 import { Router } from "express";
 import { inject, injectable } from "tsyringe";
 
-import { IJWTService } from "@auth/application/services/IJWTService";
 import { GetMeUseCase } from "@auth/application/use-cases/GetMeUseCase";
-import { AUTH_TOKENS } from "@auth/di/tokens";
+import { AuthUseCasesTokens } from "@auth/di/tokens";
 import { ensureUserIsAuthenticated } from "@auth/infrastructure/http/middlewares/ensureUserIsAuthenticated";
 
 /**
@@ -126,8 +125,7 @@ export class GetMeRoute {
   private router = Router();
 
   constructor(
-    @inject(AUTH_TOKENS.JWTService) private jwtService: IJWTService,
-    @inject(AUTH_TOKENS.GetMeUseCase) private getMeUseCase: GetMeUseCase
+    @inject(AuthUseCasesTokens.GetMeUseCase) private getMeUseCase: GetMeUseCase
   ) {}
 
   public register() {

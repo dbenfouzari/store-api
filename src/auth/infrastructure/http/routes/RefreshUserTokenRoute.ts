@@ -2,7 +2,7 @@ import { Router } from "express";
 import { inject, injectable } from "tsyringe";
 
 import { RefreshUserTokenUseCase } from "@auth/application/use-cases/RefreshUserTokenUseCase";
-import { AUTH_TOKENS } from "@auth/di/tokens";
+import { AuthUseCasesTokens } from "@auth/di/tokens";
 
 /**
  * @openapi
@@ -122,7 +122,7 @@ export class RefreshUserTokenRoute {
   private router = Router();
 
   constructor(
-    @inject(AUTH_TOKENS.RefreshUserTokenUseCase)
+    @inject(AuthUseCasesTokens.RefreshUserTokenUseCase)
     private refreshUserTokenUseCase: RefreshUserTokenUseCase
   ) {}
 

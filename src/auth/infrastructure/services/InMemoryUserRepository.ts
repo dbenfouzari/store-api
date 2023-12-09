@@ -1,29 +1,18 @@
 import type { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
+import type { IUserWriteRepository } from "@auth/application/services/IUserWriteRepository";
+import type { User } from "@auth/domain/entities/User";
 import type { EmailExceptions } from "@auth/domain/value-objects/Email";
 
 import { injectable } from "tsyringe";
 
-import { User } from "@auth/domain/entities/User";
 import { Email } from "@auth/domain/value-objects/Email";
 import { Option } from "@shared/common/Option";
 import { Result } from "@shared/common/Result";
 import { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 
 @injectable()
-export class InMemoryUserReadRepository implements IUserReadRepository {
+export class InMemoryUserRepository implements IUserReadRepository, IUserWriteRepository {
   private _users: Set<User> = new Set();
-
-  constructor() {
-    // Init with sample user
-    const user = User.create({
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@doe.com",
-      password: "myComplexPassword123!",
-    }).value;
-
-    this._users.add(user);
-  }
 
   async exists(email: string): Promise<Result<boolean, EmailExceptions>> {
     const emailResult = Email.create(email);
@@ -31,6 +20,9 @@ export class InMemoryUserReadRepository implements IUserReadRepository {
     if (emailResult.isFailure) {
       return Result.fail(emailResult.error);
     }
+
+    console.log(this._users);
+    console.log(emailResult.value);
 
     const user = [...this._users.values()].find((u) =>
       u.props.email.equals(emailResult.value)
@@ -69,5 +61,10 @@ export class InMemoryUserReadRepository implements IUserReadRepository {
 
   getAllUsers(): Promise<Set<User>> {
     return Promise.resolve(this._users);
+  }
+
+  createUser(user: User): Promise<Result<User, Error>> {
+    this._users.add(user);
+    return Promise.resolve(Result.ok(user));
   }
 }

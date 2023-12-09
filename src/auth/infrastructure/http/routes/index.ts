@@ -3,10 +3,11 @@ import type { IAppRouterV1 } from "@application/routes/IAppRouterV1";
 import { Router } from "express";
 import { inject, injectable } from "tsyringe";
 
-import { AUTH_TOKENS } from "@auth/di/tokens";
+import { AuthRoutesTokens } from "@auth/di/tokens";
 import { GetMeRoute } from "@auth/infrastructure/http/routes/GetMeRoute";
 import { LogUserInRoute } from "@auth/infrastructure/http/routes/LogUserInRoute";
 import { RefreshUserTokenRoute } from "@auth/infrastructure/http/routes/RefreshUserTokenRoute";
+import { SignUserUpRoute } from "@auth/infrastructure/http/routes/SignUserUpRoute";
 
 /**
  * @openapi
@@ -51,10 +52,11 @@ export class AuthRoutes implements IAppRouterV1 {
   router = Router();
 
   constructor(
-    @inject(AUTH_TOKENS.LogUserInRoute) private logUserInRoute: LogUserInRoute,
-    @inject(AUTH_TOKENS.GetMeRoute) private getMeRoute: GetMeRoute,
-    @inject(AUTH_TOKENS.RefreshUserTokenRoute)
-    private refreshUserTokenRoute: RefreshUserTokenRoute
+    @inject(AuthRoutesTokens.LogUserInRoute) private logUserInRoute: LogUserInRoute,
+    @inject(AuthRoutesTokens.GetMeRoute) private getMeRoute: GetMeRoute,
+    @inject(AuthRoutesTokens.RefreshUserTokenRoute)
+    private refreshUserTokenRoute: RefreshUserTokenRoute,
+    @inject(AuthRoutesTokens.SignUserUpRoute) private signUserUpRoute: SignUserUpRoute
   ) {
     this.register();
   }
@@ -63,5 +65,6 @@ export class AuthRoutes implements IAppRouterV1 {
     this.router.use(this.logUserInRoute.register());
     this.router.use(this.getMeRoute.register());
     this.router.use(this.refreshUserTokenRoute.register());
+    this.router.use(this.signUserUpRoute.register());
   }
 }

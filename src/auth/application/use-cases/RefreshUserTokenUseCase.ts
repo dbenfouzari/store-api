@@ -4,7 +4,7 @@ import { inject, injectable } from "tsyringe";
 
 import { IJWTService, TokenType } from "@auth/application/services/IJWTService";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
-import { AUTH_TOKENS } from "@auth/di/tokens";
+import { AuthServicesTokens } from "@auth/di/tokens";
 import { Result } from "@shared/common/Result";
 
 export interface RefreshUserTokenRequest {
@@ -28,8 +28,8 @@ export class RefreshUserTokenUseCase
     >
 {
   constructor(
-    @inject(AUTH_TOKENS.JWTService) private jwtService: IJWTService,
-    @inject(AUTH_TOKENS.UserReadRepository)
+    @inject(AuthServicesTokens.JWTService) private jwtService: IJWTService,
+    @inject(AuthServicesTokens.UserReadRepository)
     private userReadRepository: IUserReadRepository
   ) {}
 

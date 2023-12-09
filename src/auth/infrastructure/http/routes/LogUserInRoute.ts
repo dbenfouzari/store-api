@@ -5,7 +5,7 @@ import {
   LogUserInException,
   LogUserInUseCase,
 } from "@auth/application/use-cases/LogUserInUseCase";
-import { AUTH_TOKENS } from "@auth/di/tokens";
+import { AuthUseCasesTokens } from "@auth/di/tokens";
 
 /**
  * @openapi
@@ -172,7 +172,8 @@ export class LogUserInRoute {
   private router = Router();
 
   constructor(
-    @inject(AUTH_TOKENS.LogUserInUseCase) private logUserInUseCase: LogUserInUseCase
+    @inject(AuthUseCasesTokens.LogUserInUseCase)
+    private logUserInUseCase: LogUserInUseCase
   ) {}
 
   public register() {

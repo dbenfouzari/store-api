@@ -12,6 +12,7 @@ describe("User", () => {
     lastName: "Doe",
     email: "john@doe.com",
     password: "myComplexPassword123!",
+    refreshToken: "",
   };
 
   it("should return a user when valid props are provided", () => {
