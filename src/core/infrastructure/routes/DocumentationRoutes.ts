@@ -58,10 +58,20 @@ export class DocumentationRoutes implements IAppRouterV1 {
       failOnErrors: true,
       definition: {
         openapi: "3.1.0",
+        externalDocs: {
+          description: "JSON API Specification",
+          url: "http://localhost:4000/api/v1/api-docs-json",
+        },
         info: {
-          title: "API Documentation",
-          version: "1.0.0",
-          description: "API Documentation",
+          title: "Store API Documentation",
+          version: "0.0.5",
+          description:
+            "Documentation for the Store API. This API is used to manage the store.",
+          contact: {
+            url: "https://dbenfouzari.tech",
+            name: "Donovan Benfouzari",
+            email: "d.benfouzari@gmail.com",
+          },
         },
         servers: [
           {
