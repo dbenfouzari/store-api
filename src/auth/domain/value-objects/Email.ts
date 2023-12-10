@@ -1,5 +1,8 @@
-import { Option } from "@shared/common/Option";
-import { Result } from "@shared/common/Result";
+import type { Option } from "@shared/common/Option";
+import type { Result } from "@shared/common/Result";
+
+import { None, Some } from "@shared/common/Option";
+import { Err, Ok } from "@shared/common/Result";
 import { ValueObject } from "@shared/domain/models/ValueObject";
 
 type EmailProps = {
@@ -15,8 +18,8 @@ export class Email extends ValueObject<EmailProps> {
     const validatedValue = this.validate(value);
 
     return validatedValue.match(
-      (value) => Result.ok(new Email({ value })),
-      () => Result.fail(EmailExceptions.IncorrectFormat)
+      (value) => Ok.of(new Email({ value })),
+      () => Err.of(EmailExceptions.IncorrectFormat)
     );
   }
 
@@ -26,9 +29,9 @@ export class Email extends ValueObject<EmailProps> {
     );
 
     if (regex.test(value)) {
-      return Option.some(value);
+      return Some.of(value);
     }
 
-    return Option.none();
+    return new None();
   }
 }

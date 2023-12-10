@@ -35,7 +35,7 @@ describe("dateTime", () => {
 
     it("`parse` should work", () => {
       const dateString = "2021-08-06";
-      const date = DateTime.parse(dateString).value;
+      const date = DateTime.parse(dateString).unwrap();
 
       expect(date.year).toBe(2021);
       expect(date.month).toBe(8);
@@ -46,7 +46,7 @@ describe("dateTime", () => {
       const dateString = "hello testing world";
       const date = DateTime.parse(dateString);
 
-      expect(date.error).toBe(DateTimeExceptions.StringCannotBeParsed);
+      expect(date.unwrapErr()).toBe(DateTimeExceptions.StringCannotBeParsed);
     });
 
     it("`tryParse` should work", () => {

@@ -1,6 +1,7 @@
 import type { PriceExceptions } from "../value-objects/Price";
+import type { Result } from "@shared/common/Result";
 
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 import { Entity } from "@shared/domain/models/Entity";
 
 import { Price } from "../value-objects/Price";
@@ -85,20 +86,20 @@ export class ProductVariant extends Entity<ProductVariantProps> {
     const isNameValid = this.validateName(props.name);
 
     if (!isNameValid) {
-      return Result.fail(ProductVariantExceptions.NameLength);
+      return Err.of(ProductVariantExceptions.NameLength);
     }
 
     const priceResult = Price.create(props.price);
 
-    if (priceResult.isFailure) {
-      return Result.fail(priceResult.error);
+    if (priceResult.isErr()) {
+      return Err.of(priceResult.unwrapErr());
     }
 
-    return Result.ok(
+    return Ok.of(
       new this({
         name: props.name,
         description: props.description,
-        price: priceResult.value,
+        price: priceResult.unwrap(),
       })
     );
   }

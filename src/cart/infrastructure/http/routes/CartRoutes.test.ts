@@ -18,14 +18,14 @@ import { CartRoutes } from "@cart/infrastructure/http/routes/index";
 import { InMemoryCartReadRepository } from "@cart/infrastructure/http/services/InMemoryCartReadRepository";
 import { ProductVariant } from "@product/domain/entities/ProductVariant";
 import { InMemoryProductVariantReadRepository } from "@product/infrastructure/services/InMemoryProductVariantReadRepository";
-import { Option } from "@shared/common/Option";
+import { None, Some } from "@shared/common/Option";
 import { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 import { DateTime } from "@shared/domain/value-objects/DateTime";
 
 const emptyCart = Cart.create({
   createdAt: DateTime.now(),
   updatedAt: DateTime.now(),
-  ownerId: UniqueEntityId.create("123e4567-e89b-12d3-a456-426614174000").value,
+  ownerId: UniqueEntityId.create("123e4567-e89b-12d3-a456-426614174000").unwrap(),
   items: [],
 });
 
@@ -64,11 +64,11 @@ describe("CartRoutes", () => {
     it("should return correct response for valid request", async () => {
       jest
         .spyOn(cartReadRepository, "findCartByCartId")
-        .mockResolvedValueOnce(Option.some(emptyCart.value));
+        .mockResolvedValueOnce(Some.of(emptyCart.unwrap()));
 
       jest
         .spyOn(productVariantReadRepository, "findProductVariantByProductVariantId")
-        .mockResolvedValueOnce(Option.some(productVariant.value));
+        .mockResolvedValueOnce(Some.of(productVariant.unwrap()));
 
       const { status, body } = await request(app).post("/cart/add-item").send({
         cartId: "123e4567-e89b-12d3-a456-426614174000",
@@ -98,7 +98,7 @@ describe("CartRoutes", () => {
     it("should return correct response when cart is not found", async () => {
       jest
         .spyOn(cartReadRepository, "findCartByCartId")
-        .mockResolvedValueOnce(Option.none());
+        .mockResolvedValueOnce(new None());
 
       const { status, body } = await request(app).post("/cart/add-item").send({
         cartId: "123e4567-e89b-12d3-a456-426614174000",
@@ -116,11 +116,11 @@ describe("CartRoutes", () => {
     it("should return correct response when product variant is not found", async () => {
       jest
         .spyOn(cartReadRepository, "findCartByCartId")
-        .mockResolvedValueOnce(Option.some(emptyCart.value));
+        .mockResolvedValueOnce(Some.of(emptyCart.unwrap()));
 
       jest
         .spyOn(productVariantReadRepository, "findProductVariantByProductVariantId")
-        .mockResolvedValueOnce(Option.none());
+        .mockResolvedValueOnce(new None());
 
       const { status, body } = await request(app).post("/cart/add-item").send({
         cartId: "123e4567-e89b-12d3-a456-426614174000",

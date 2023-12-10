@@ -134,16 +134,16 @@ export class RefreshUserTokenRoute {
         const response = await this.refreshUserTokenUseCase.execute(request);
 
         return response.match(
-          (exception) => {
-            res.status(400).json({
-              success: false,
-              exception: exception,
-            });
-          },
           (success) => {
             res.status(200).json({
               success: true,
               accessToken: success.accessToken,
+            });
+          },
+          (exception) => {
+            res.status(400).json({
+              success: false,
+              exception: exception,
             });
           }
         );

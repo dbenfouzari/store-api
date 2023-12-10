@@ -1,7 +1,8 @@
 import type { IProductVariantReadRepository } from "@product/application/services/IProductVariantReadRepository";
 import type { ProductVariant } from "@product/domain/entities/ProductVariant";
+import type { Option } from "@shared/common/Option";
 
-import { Option } from "@shared/common/Option";
+import { None, Some } from "@shared/common/Option";
 import { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 
 export class InMemoryProductVariantReadRepository
@@ -9,11 +10,17 @@ export class InMemoryProductVariantReadRepository
 {
   private _productVariants: Map<UniqueEntityId, ProductVariant> = new Map();
 
-  findProductVariantByProductVariantId(productVariantId: string) {
-    return Promise.resolve(
-      Option.from(
-        this._productVariants.get(UniqueEntityId.create(productVariantId).value)
-      )
+  async findProductVariantByProductVariantId(
+    productVariantId: string
+  ): Promise<Option<ProductVariant>> {
+    const productVariantOrUndefined = this._productVariants.get(
+      UniqueEntityId.create(productVariantId).unwrap()
     );
+
+    if (productVariantOrUndefined === undefined) {
+      return new None();
+    }
+
+    return Some.of(productVariantOrUndefined);
   }
 }

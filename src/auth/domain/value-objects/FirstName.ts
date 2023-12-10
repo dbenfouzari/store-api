@@ -1,5 +1,8 @@
-import { Option } from "@shared/common/Option";
-import { Result } from "@shared/common/Result";
+import type { Option } from "@shared/common/Option";
+import type { Result } from "@shared/common/Result";
+
+import { None, Some } from "@shared/common/Option";
+import { Err, Ok } from "@shared/common/Result";
 import { ValueObject } from "@shared/domain/models/ValueObject";
 
 type FirstNameProps = {
@@ -15,16 +18,16 @@ export class FirstName extends ValueObject<FirstNameProps> {
     const validatedValue = this.validate(value);
 
     return validatedValue.match(
-      (value) => Result.ok(new FirstName({ value })),
-      () => Result.fail(FirstNameExceptions.TooShort)
+      (value) => Ok.of(new FirstName({ value })),
+      () => Err.of(FirstNameExceptions.TooShort)
     );
   }
 
   static validate(value: string): Option<string> {
     if (value.length < 2) {
-      return Option.none();
+      return new None();
     }
 
-    return Option.some(value);
+    return Some.of(value);
   }
 }

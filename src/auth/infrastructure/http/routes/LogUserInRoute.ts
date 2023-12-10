@@ -186,6 +186,12 @@ export class LogUserInRoute {
         });
 
         return logUserInResponse.match(
+          (data) => {
+            return res.status(200).json({
+              success: true,
+              data: data,
+            });
+          },
           (exception) => {
             if (exception === LogUserInException.UserNotFound) {
               return res.status(404).json({
@@ -197,12 +203,6 @@ export class LogUserInRoute {
             return res.status(400).json({
               success: false,
               exception: exception,
-            });
-          },
-          (data) => {
-            return res.status(200).json({
-              success: true,
-              data: data,
             });
           }
         );

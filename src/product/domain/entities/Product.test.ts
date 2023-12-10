@@ -20,19 +20,19 @@ describe("Product", () => {
       variants,
     });
 
-    expect(product.isSuccess).toBe(true);
+    expect(product.isOk()).toBe(true);
   });
 
   it("should create a product with a default variant", () => {
     const product = Product.create({ name: "Product" });
 
-    expect(product.isSuccess).toBe(true);
+    expect(product.isOk()).toBe(true);
   });
 
   it("should create a default variant if no variants are provided", () => {
     const product = Product.create({ name: "Product" });
 
-    expect(product.value.props.variants.size).toBe(1);
+    expect(product.unwrap().props.variants.size).toBe(1);
   });
 
   it("should have correct name", () => {
@@ -40,7 +40,7 @@ describe("Product", () => {
       name: "Product",
     });
 
-    expect(product.value.props.name.props.value).toBe("Product");
+    expect(product.unwrap().props.name.props.value).toBe("Product");
   });
 
   it("should fail if one of the variants is invalid", () => {
@@ -62,7 +62,7 @@ describe("Product", () => {
       variants,
     });
 
-    expect(product.isFailure).toBe(true);
+    expect(product.isErr()).toBe(true);
   });
 
   it("should fail if the name is invalid", () => {
@@ -70,6 +70,6 @@ describe("Product", () => {
       name: "",
     });
 
-    expect(product.isFailure).toBe(true);
+    expect(product.isErr()).toBe(true);
   });
 });

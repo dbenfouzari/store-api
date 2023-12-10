@@ -1,4 +1,6 @@
-import { Result } from "@shared/common/Result";
+import type { Result } from "@shared/common/Result";
+
+import { Err, Ok } from "@shared/common/Result";
 import { ValueObject } from "@shared/domain/models/ValueObject";
 
 type PasswordProps = {
@@ -24,66 +26,64 @@ export class Password extends ValueObject<PasswordProps> {
     const hasAtLeastOneSpecialCharacterResult =
       Password.validateHasAtLeastOneSpecialCharacter(value);
 
-    const result = Result.combine(
-      lengthResult,
-      hasAtLeastOneNumberResult,
-      hasAtLeastOneUpperCaseLetterResult,
-      hasAtLeastOneLowerCaseLetterResult,
-      hasAtLeastOneSpecialCharacterResult
+    return lengthResult.andThen(() =>
+      hasAtLeastOneNumberResult.andThen(() =>
+        hasAtLeastOneUpperCaseLetterResult.andThen(() =>
+          hasAtLeastOneLowerCaseLetterResult.andThen(() =>
+            hasAtLeastOneSpecialCharacterResult.andThen(() =>
+              Ok.of(new Password({ value }))
+            )
+          )
+        )
+      )
     );
-
-    if (result.isFailure) {
-      return Result.fail(result.error);
-    }
-
-    return Result.ok(new Password({ value }));
   }
 
   static validateLength(value: string): Result<string, PasswordExceptions.TooShort> {
     if (value.length < 8) {
-      return Result.fail(PasswordExceptions.TooShort);
+      return Err.of(PasswordExceptions.TooShort);
     }
 
-    return Result.ok(value);
+    return Ok.of(value);
   }
 
   static validateHasAtLeastOneNumber(
     value: string
   ): Result<string, PasswordExceptions.MustHaveAtLeastOneNumber> {
     if (!/\d/.test(value)) {
-      return Result.fail(PasswordExceptions.MustHaveAtLeastOneNumber);
+      return Err.of(PasswordExceptions.MustHaveAtLeastOneNumber);
     }
 
-    return Result.ok(value);
+    return Ok.of(value);
   }
 
   static validateHasAtLeastOneUpperCaseLetter(
     value: string
   ): Result<string, PasswordExceptions.MustHaveAtLeastOneUpperCaseLetter> {
     if (!/[A-Z]/.test(value)) {
-      return Result.fail(PasswordExceptions.MustHaveAtLeastOneUpperCaseLetter);
+      return Err.of(PasswordExceptions.MustHaveAtLeastOneUpperCaseLetter);
     }
 
-    return Result.ok(value);
+    return Ok.of(value);
   }
 
   static validateHasAtLeastOneLowerCaseLetter(
     value: string
   ): Result<string, PasswordExceptions.MustHaveAtLeastOneLowerCaseLetter> {
     if (!/[a-z]/.test(value)) {
-      return Result.fail(PasswordExceptions.MustHaveAtLeastOneLowerCaseLetter);
+      return Err.of(PasswordExceptions.MustHaveAtLeastOneLowerCaseLetter);
     }
 
-    return Result.ok(value);
+    return Ok.of(value);
   }
 
   static validateHasAtLeastOneSpecialCharacter(
     value: string
   ): Result<string, PasswordExceptions.MustHaveAtLeastOneSpecialCharacter> {
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) {
-      return Result.fail(PasswordExceptions.MustHaveAtLeastOneSpecialCharacter);
+      return Err.of(PasswordExceptions.MustHaveAtLeastOneSpecialCharacter);
     }
 
-    return Result.ok(value);
+    return Ok.of(value);
   }
 }

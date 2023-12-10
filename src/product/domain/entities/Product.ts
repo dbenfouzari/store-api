@@ -1,8 +1,10 @@
+import type { ProductVariantExceptions } from "./ProductVariant";
 import type { ProductNameLengthError } from "@product/domain/errors/ProductNameLengthError";
-import type { ResultError } from "@shared/common/Result";
+import type { PriceExceptions } from "@product/domain/value-objects/Price";
+import type { Result } from "@shared/common/Result";
 import type { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 import { Entity } from "@shared/domain/models/Entity";
 
 import { ProductTitle } from "../value-objects/ProductTitle";
@@ -24,9 +26,7 @@ type CreateProductProps = {
   }[];
 };
 
-type ProductFailure =
-  | ResultError<ReturnType<typeof ProductVariant.create>>
-  | ProductNameLengthError;
+type ProductFailure = ProductNameLengthError | ProductVariantExceptions | PriceExceptions;
 
 export class Product extends Entity<ProductProps> {
   private constructor(props: ProductProps, id?: UniqueEntityId) {
@@ -65,17 +65,18 @@ export class Product extends Entity<ProductProps> {
     const titleResult = ProductTitle.create(props.name);
 
     const variantsResults = getVariantsResults();
-    const combinedVariantsResults = Result.combine(...variantsResults, titleResult);
 
-    if (combinedVariantsResults.isFailure) {
-      return Result.fail(combinedVariantsResults.error);
+    const areAllVariantsValid = variantsResults.every((result) => result.isOk());
+
+    if (!areAllVariantsValid) {
+      return Err.of(variantsResults.find((result) => result.isErr())!.unwrapErr());
     }
 
-    return Result.ok(
+    return Ok.of(
       new Product(
         {
-          name: titleResult.value,
-          variants: new Set(variantsResults.map((result) => result.value)),
+          name: titleResult.unwrap(),
+          variants: new Set(variantsResults.map((result) => result.unwrap())),
         },
         id
       )

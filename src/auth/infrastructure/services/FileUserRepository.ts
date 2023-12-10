@@ -1,6 +1,8 @@
 import type { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
 import type { IUserWriteRepository } from "@auth/application/services/IUserWriteRepository";
 import type { EmailExceptions } from "@auth/domain/value-objects/Email";
+import type { Option } from "@shared/common/Option";
+import type { Result } from "@shared/common/Result";
 
 import fs from "fs";
 import path from "path";
@@ -8,8 +10,8 @@ import path from "path";
 import { injectable } from "tsyringe";
 
 import { User } from "@auth/domain/entities/User";
-import { Option } from "@shared/common/Option";
-import { Result } from "@shared/common/Result";
+import { None, Some } from "@shared/common/Option";
+import { Ok } from "@shared/common/Result";
 import { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 
 type UserJson = {
@@ -50,7 +52,7 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
       this.filePath,
       JSON.stringify(nextUsers.map(mapUserToData), null, 2)
     );
-    return Promise.resolve(Result.ok(user));
+    return Promise.resolve(Ok.of(user));
   }
 
   async exists(email: string): Promise<Result<boolean, EmailExceptions>> {
@@ -58,7 +60,7 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
     const user = [...users.values()].find((u) => u.props.email.props.value === email);
     const exists = user !== undefined;
 
-    return Promise.resolve(Result.ok(exists));
+    return Promise.resolve(Ok.of(exists));
   }
 
   getAllUsers(): Promise<User[]> {
@@ -71,10 +73,10 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
     const user = [...users.values()].find((u) => u.props.email.props.value === email);
 
     if (user === undefined) {
-      return Promise.resolve(Result.ok(Option.none()));
+      return Promise.resolve(Ok.of(new None()));
     }
 
-    return Promise.resolve(Result.ok(Option.some(user)));
+    return Promise.resolve(Ok.of(Some.of(user)));
   }
 
   getUserById(id: string): Promise<Option<User>> {
@@ -82,10 +84,10 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
     const user = users.find((u) => u.id.toString() === id);
 
     if (user === undefined) {
-      return Promise.resolve(Option.none());
+      return Promise.resolve(new None());
     }
 
-    return Promise.resolve(Option.some(user));
+    return Promise.resolve(Some.of(user));
   }
 
   private readFile(): User[] {
@@ -100,8 +102,8 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
           password: user.password,
           refreshToken: user.refreshToken,
         },
-        UniqueEntityId.create(user.id).value
-      ).value;
+        UniqueEntityId.create(user.id).unwrap()
+      ).unwrap();
     });
   }
 
@@ -121,6 +123,6 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
       JSON.stringify(nextUsers.map(mapUserToData), null, 2)
     );
 
-    return Promise.resolve(Result.ok(user));
+    return Promise.resolve(Ok.of(user));
   }
 }

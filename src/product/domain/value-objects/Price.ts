@@ -1,4 +1,6 @@
-import { Result } from "@shared/common/Result";
+import type { Result } from "@shared/common/Result";
+
+import { Err, Ok } from "@shared/common/Result";
 import { ValueObject } from "@shared/domain/models/ValueObject";
 
 import { PriceFormat } from "../enums/PriceFormat";
@@ -32,10 +34,10 @@ export class Price extends ValueObject<PriceProps> {
     const isAmountValid = this.validateAmount(price);
 
     if (!isAmountValid) {
-      return Result.fail(PriceExceptions.MustBeGreaterThanZero);
+      return Err.of(PriceExceptions.MustBeGreaterThanZero);
     }
 
-    return Result.ok(new this({ value: price }));
+    return Ok.of(new this({ value: price }));
   }
 
   /**

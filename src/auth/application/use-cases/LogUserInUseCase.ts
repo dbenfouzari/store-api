@@ -1,3 +1,4 @@
+import type { Result } from "@shared/common/Result";
 import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
@@ -6,7 +7,7 @@ import { IJWTService, TokenType } from "@auth/application/services/IJWTService";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
 import { IUserWriteRepository } from "@auth/application/services/IUserWriteRepository";
 import { AuthServicesTokens } from "@auth/di/tokens";
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 
 export interface LogUserInRequest {
   email: string;
@@ -42,12 +43,11 @@ export class LogUserInUseCase
     const user = await this.userReadRepository.getUserByEmail(request.email);
 
     return user.match(
-      () => Result.fail(LogUserInException.UserNotFound),
       (maybeUser) => {
         return maybeUser.match(
           (user) => {
             if (user.props.password.props.value !== request.password) {
-              return Result.fail(LogUserInException.InvalidPassword);
+              return Err.of(LogUserInException.InvalidPassword);
             }
 
             const accessToken = this.jwtService.sign(
@@ -70,14 +70,15 @@ export class LogUserInUseCase
 
             this.userWriteRepository.updateUser(user);
 
-            return Result.ok({
+            return Ok.of({
               accessToken: accessToken,
               refreshToken: refreshToken,
             });
           },
-          () => Result.fail(LogUserInException.UserNotFound)
+          () => Err.of(LogUserInException.UserNotFound)
         );
-      }
+      },
+      () => Err.of(LogUserInException.UserNotFound)
     );
   }
 }

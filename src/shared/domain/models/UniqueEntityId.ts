@@ -15,9 +15,11 @@
  * including the UUID used for the primary key field
  */
 
+import type { Result } from "@shared/common/Result";
+
 import { v4 as uuidV4, validate } from "uuid";
 
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 
 import { Identifier } from "./Identifier";
 
@@ -42,17 +44,17 @@ export class UniqueEntityId extends Identifier<string> {
     id?: string | UniqueEntityId
   ): Result<UniqueEntityId, UniqueEntityIdExceptions> {
     if (!id) {
-      return Result.ok(new UniqueEntityId(uuidV4()));
+      return Ok.of(new UniqueEntityId(uuidV4()));
     }
 
     if (id instanceof UniqueEntityId) {
-      return Result.ok(id);
+      return Ok.of(id);
     }
 
     if (validate(id)) {
-      return Result.ok(new UniqueEntityId(id));
+      return Ok.of(new UniqueEntityId(id));
     }
 
-    return Result.fail(UniqueEntityIdExceptions.NotValidUUID);
+    return Err.of(UniqueEntityIdExceptions.NotValidUUID);
   }
 }

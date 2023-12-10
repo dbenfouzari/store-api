@@ -8,7 +8,7 @@ describe("Product Variant", () => {
       price: 2000,
     });
 
-    const variant = variantResult.value;
+    const variant = variantResult.unwrap();
 
     it("should have correct name value", () => {
       expect(variant.props.name).toBe("Default Variant");
@@ -31,7 +31,7 @@ describe("Product Variant", () => {
         price: 2000,
       });
 
-      expect(variantResult.error).toBe(ProductVariantExceptions.NameLength);
+      expect(variantResult.unwrapErr()).toBe(ProductVariantExceptions.NameLength);
     });
 
     it.each`
@@ -46,7 +46,7 @@ describe("Product Variant", () => {
         price: 2000,
       });
 
-      expect(variantResult.error).toBe(ProductVariantExceptions.NameLength);
+      expect(variantResult.unwrapErr()).toBe(ProductVariantExceptions.NameLength);
     });
   });
 });

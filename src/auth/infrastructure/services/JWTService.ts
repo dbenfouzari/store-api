@@ -1,4 +1,5 @@
 import type { IJWTService, TokenPayload } from "@auth/application/services/IJWTService";
+import type { Option } from "@shared/common/Option";
 
 import jwt from "jsonwebtoken";
 import { inject, injectable } from "tsyringe";
@@ -6,7 +7,7 @@ import { inject, injectable } from "tsyringe";
 import { IConfigService } from "@application/config/IConfigService";
 import { TokenType } from "@auth/application/services/IJWTService";
 import { DI_TOKENS } from "@infrastructure/di/tokens";
-import { Option } from "@shared/common/Option";
+import { None, Some } from "@shared/common/Option";
 
 @injectable()
 export class JWTService implements IJWTService {
@@ -39,14 +40,14 @@ export class JWTService implements IJWTService {
         : this._configService.get("REFRESH_TOKEN_SECRET");
 
     try {
-      return Option.some(
+      return Some.of(
         jwt.verify(token, secret, {
           audience: this._configService.get("JWT_AUDIENCE"),
           issuer: this._configService.get("JWT_ISSUER"),
         }) as TokenPayload
       );
     } catch (error) {
-      return Option.none();
+      return new None();
     }
   }
 }

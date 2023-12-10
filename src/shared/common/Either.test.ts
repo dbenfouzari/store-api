@@ -1,5 +1,5 @@
 import { Left, Right } from "@shared/common/Either";
-import { Option } from "@shared/common/Option";
+import { None, Option, Some } from "@shared/common/Option";
 
 describe("Either", () => {
   describe("Left", () => {
@@ -31,24 +31,24 @@ describe("Either", () => {
   describe("left", () => {
     it("should convert the left side of Either<L, R> to an Some<L>", () => {
       const left = Left.from("left");
-      expect(left.left()).toStrictEqual(Option.some("left"));
+      expect(left.left()).toStrictEqual(Some.of("left"));
     });
 
     it("should convert the right side of Either<L, R> to a None", () => {
       const right = Right.from("right");
-      expect(right.left()).toStrictEqual(Option.none());
+      expect(right.left()).toStrictEqual(new None());
     });
   });
 
   describe("right", () => {
     it("should convert the right side of Either<L, R> to an Some<R>", () => {
       const right = Right.from("right");
-      expect(right.right()).toStrictEqual(Option.some("right"));
+      expect(right.right()).toStrictEqual(Some.of("right"));
     });
 
     it("should convert the left side of Either<L, R> to a None", () => {
       const left = Left.from("left");
-      expect(left.right()).toStrictEqual(Option.none());
+      expect(left.right()).toStrictEqual(new None());
     });
   });
 

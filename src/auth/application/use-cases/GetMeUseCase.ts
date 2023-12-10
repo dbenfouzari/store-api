@@ -1,4 +1,5 @@
 import type { User } from "@auth/domain/entities/User";
+import type { Result } from "@shared/common/Result";
 import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
@@ -6,7 +7,7 @@ import { inject, injectable } from "tsyringe";
 import { IJWTService, TokenType } from "@auth/application/services/IJWTService";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
 import { AuthServicesTokens } from "@auth/di/tokens";
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 
 type GetMeRequest = {
   token: string;
@@ -34,7 +35,7 @@ export class GetMeUseCase implements IUseCase<GetMeRequest, GetMeResponse> {
     );
 
     if (!maybeTokenPayload) {
-      return Result.fail(GetMeException.UserNotFound);
+      return Err.of(GetMeException.UserNotFound);
     }
 
     const user = await this.userReadRepository.getUserByEmail(
@@ -42,13 +43,13 @@ export class GetMeUseCase implements IUseCase<GetMeRequest, GetMeResponse> {
     );
 
     return user.match(
-      () => Result.fail(GetMeException.UserNotFound),
       (maybeUser) => {
         return maybeUser.match(
-          (user) => Result.ok(user),
-          () => Result.fail(GetMeException.UserNotFound)
+          (user) => Ok.of(user),
+          () => Err.of(GetMeException.UserNotFound)
         );
-      }
+      },
+      () => Err.of(GetMeException.UserNotFound)
     );
   }
 }

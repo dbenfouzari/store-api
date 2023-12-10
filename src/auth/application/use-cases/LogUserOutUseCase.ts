@@ -1,4 +1,5 @@
 import type { EmailExceptions } from "@auth/domain/value-objects/Email";
+import type { Result } from "@shared/common/Result";
 import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
@@ -6,7 +7,7 @@ import { inject, injectable } from "tsyringe";
 import { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
 import { IUserWriteRepository } from "@auth/application/services/IUserWriteRepository";
 import { AuthServicesTokens } from "@auth/di/tokens";
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 
 export type LogUserOutUseCaseRequest = {
   email: string;
@@ -35,14 +36,14 @@ export class LogUserOutUseCase
   async execute(request: LogUserOutUseCaseRequest): Promise<LogUserOutUseCaseResponse> {
     const userResult = await this.userReadRepository.getUserByEmail(request.email);
 
-    if (userResult.isFailure) {
-      return Result.fail(userResult.error);
+    if (userResult.isErr()) {
+      return Err.of(userResult.unwrapErr());
     }
 
-    const userOption = userResult.value;
+    const userOption = userResult.unwrap();
 
     if (!userOption.isSome()) {
-      return Result.fail(LogUserOutUseCaseErrors.UserNotFound);
+      return Err.of(LogUserOutUseCaseErrors.UserNotFound);
     }
 
     const user = userOption.unwrap();
@@ -51,10 +52,10 @@ export class LogUserOutUseCase
 
     const updatedUserResult = await this.userWriteRepository.updateUser(user);
 
-    if (updatedUserResult.isFailure) {
-      return Result.fail(updatedUserResult.error);
+    if (updatedUserResult.isErr()) {
+      return Err.of(updatedUserResult.unwrapErr());
     }
 
-    return Result.ok(undefined);
+    return Ok.of(undefined);
   }
 }

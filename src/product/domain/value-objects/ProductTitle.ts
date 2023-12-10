@@ -1,4 +1,6 @@
-import { Result } from "@shared/common/Result";
+import type { Result } from "@shared/common/Result";
+
+import { Err, Ok } from "@shared/common/Result";
 import { ValueObject } from "@shared/domain/models/ValueObject";
 
 import { ProductNameLengthError } from "../errors/ProductNameLengthError";
@@ -16,10 +18,10 @@ export class ProductTitle extends ValueObject<ProductTitleProps> {
     const isValid = this.validate(title);
 
     if (!isValid) {
-      return Result.fail(new ProductNameLengthError());
+      return Err.of(new ProductNameLengthError());
     }
 
-    return Result.ok(new this({ value: title }));
+    return Ok.of(new this({ value: title }));
   }
 
   private static validate(value: string) {

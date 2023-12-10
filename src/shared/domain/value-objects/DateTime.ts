@@ -1,5 +1,8 @@
-import { Option } from "@shared/common/Option";
-import { Result } from "@shared/common/Result";
+import type { Option } from "@shared/common/Option";
+import type { Result } from "@shared/common/Result";
+
+import { None, Some } from "@shared/common/Option";
+import { Err, Ok } from "@shared/common/Result";
 
 import { Duration } from "./Duration";
 
@@ -169,10 +172,10 @@ export class DateTime {
    */
   static parse(formattedString: string): Result<DateTime, DateTimeExceptions> {
     if (isNaN(Date.parse(formattedString))) {
-      return Result.fail(DateTimeExceptions.StringCannotBeParsed);
+      return Err.of(DateTimeExceptions.StringCannotBeParsed);
     }
 
-    return Result.ok(DateTime.fromMillisecondsSinceEpoch(Date.parse(formattedString)));
+    return Ok.of(DateTime.fromMillisecondsSinceEpoch(Date.parse(formattedString)));
   }
 
   /**
@@ -187,8 +190,8 @@ export class DateTime {
    */
   static tryParse(formattedString: string): Option<DateTime> {
     return this.parse(formattedString).match<Option<DateTime>>(
-      () => Option.none(),
-      (dateTime) => Option.some(dateTime)
+      (dateTime) => Some.of(dateTime),
+      () => new None()
     );
   }
   //#endregion

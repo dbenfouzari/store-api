@@ -8,12 +8,14 @@ import type {
 } from "@product/domain/entities/ProductVariant";
 import type { PriceExceptions } from "@product/domain/value-objects/Price";
 import type { Either } from "@shared/common/Either";
+import type { Option } from "@shared/common/Option";
+import type { Result } from "@shared/common/Result";
 import type { UniqueEntityIdExceptions } from "@shared/domain/models/UniqueEntityId";
 import type { DateTimeExceptions } from "@shared/domain/value-objects/DateTime";
 
 import { Left, Right } from "@shared/common/Either";
-import { Option } from "@shared/common/Option";
-import { Result } from "@shared/common/Result";
+import { None, Some } from "@shared/common/Option";
+import { Err, Ok } from "@shared/common/Result";
 import { AggregateRoot } from "@shared/domain/models/AggregateRoot";
 import { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 import { DateTime } from "@shared/domain/value-objects/DateTime";
@@ -36,6 +38,11 @@ export type CreateCartProps = {
   ownerId: UniqueEntityId | string;
   items?: CreateCartItemProps[];
 };
+
+type GetCartItemsExceptions =
+  | CartItemExceptions
+  | ProductVariantExceptions
+  | PriceExceptions;
 
 /**
  * @openapi
@@ -98,54 +105,60 @@ export class Cart extends AggregateRoot<CartProps> {
 
     const cartItemsResult = this.getCartItems(props.items);
 
-    const result = Result.combine(ownerId, createdAt, updatedAt, cartItemsResult);
-
-    if (result.isFailure) {
-      return Result.fail(result.error);
-    }
-
-    return Result.ok(
-      new Cart({
-        createdAt: createdAt.value,
-        updatedAt: updatedAt.value,
-        ownerId: ownerId.value,
-        items: cartItemsResult.value,
-      })
-    );
+    return ownerId.andThen((ownerId) => {
+      return createdAt.andThen((createdAt) => {
+        return updatedAt.andThen((updatedAt) => {
+          return cartItemsResult.andThen((cartItems) => {
+            return Ok.of(
+              new Cart({
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                ownerId: ownerId,
+                items: cartItems,
+              })
+            );
+          });
+        });
+      });
+    });
   }
 
   private static getValueAsOption(
     value: string | DateTime | undefined
   ): Option<Either<DateTime, string>> {
     if (typeof value === "string") {
-      return Option.some(Right.from<DateTime, string>(value));
+      return Some.of(Right.from<DateTime, string>(value));
     }
 
     if (value instanceof DateTime) {
-      return Option.some(Left.from<DateTime, string>(value));
+      return Some.of(Left.from<DateTime, string>(value));
     }
 
-    return Option.none();
+    return new None();
   }
 
   private static getCartItems(
     items: CreateCartItemProps[] | undefined
-  ): Result<
-    Set<CartItem>,
-    CartItemExceptions | ProductVariantExceptions | PriceExceptions
-  > {
+  ): Result<Set<CartItem>, GetCartItemsExceptions> {
     if (!items) {
-      return Result.ok(new Set());
+      return Ok.of(new Set());
     }
 
     const cartItemsResult = items.map((item) => CartItem.create(item));
-    const result = Result.combine(...cartItemsResult);
 
-    if (result.isFailure) {
-      return Result.fail(result.error);
+    // combine items results into a single result
+    const result = cartItemsResult.reduce(
+      (acc, curr) => {
+        return acc.andThen(() => curr);
+      },
+      Ok.of(undefined) as unknown as Result<CartItem, GetCartItemsExceptions>
+    );
+
+    if (result.isErr()) {
+      return Err.of(result.unwrapErr());
     }
 
-    return Result.ok(new Set(cartItemsResult.map((result) => result.value)));
+    return Ok.of(new Set(cartItemsResult.map((result) => result.unwrap())));
   }
 
   public addProductVariant(
@@ -160,12 +173,12 @@ export class Cart extends AggregateRoot<CartProps> {
       quantity,
     });
 
-    if (cartItemResult.isFailure) {
-      return Result.fail(cartItemResult.error);
+    if (cartItemResult.isErr()) {
+      return Err.of(cartItemResult.unwrapErr());
     }
 
-    this.props.items.add(cartItemResult.value);
+    this.props.items.add(cartItemResult.unwrap());
 
-    return Result.ok(undefined);
+    return Ok.of(undefined);
   }
 }

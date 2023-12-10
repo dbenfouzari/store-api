@@ -74,11 +74,12 @@ export class LogUserOutRoute {
 
         const result = await this.logUserOutUseCase.execute({ email });
 
-        if (result.isFailure) {
+        if (result.isErr()) {
+          const error = result.unwrapErr();
+
           return res.status(400).json({
             success: false,
-            exception:
-              result.error instanceof Error ? result.error.message : result.error,
+            exception: error instanceof Error ? error.message : error,
           });
         }
 

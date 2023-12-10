@@ -1,3 +1,4 @@
+import type { Result } from "@shared/common/Result";
 import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
@@ -6,7 +7,7 @@ import { ICartReadRepository } from "@cart/application/services/ICartReadReposit
 import { CART_TOKENS } from "@cart/di/tokens";
 import { DI_TOKENS } from "@infrastructure/di/tokens";
 import { IProductVariantReadRepository } from "@product/application/services/IProductVariantReadRepository";
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 
 export type AddProductVariantToCartRequest = {
   /** The ID of the cart to add the product variant to. */
@@ -50,16 +51,16 @@ export class AddProductVariantToCart
         request.productVariantId
       );
 
-    return cart.match(
-      (cart) =>
-        productVariant.match<Result<any, any>>(
-          (productVariant) => {
-            cart.addProductVariant(productVariant, request.quantity ?? 1);
-            return Result.ok(undefined);
-          },
-          () => Result.fail(AddProductVariantToCartExceptions.ProductVariantNotFound)
-        ),
-      () => Result.fail(AddProductVariantToCartExceptions.CartNotFound)
-    );
+    if (cart.isNone()) {
+      return Err.of(AddProductVariantToCartExceptions.CartNotFound);
+    }
+
+    if (productVariant.isNone()) {
+      return Err.of(AddProductVariantToCartExceptions.ProductVariantNotFound);
+    }
+
+    cart.unwrap().addProductVariant(productVariant.unwrap(), request.quantity ?? 1);
+
+    return Ok.of(undefined);
   }
 }

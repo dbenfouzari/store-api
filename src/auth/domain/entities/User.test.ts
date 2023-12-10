@@ -18,7 +18,7 @@ describe("User", () => {
   it("should return a user when valid props are provided", () => {
     const userResult = User.create(validProps);
 
-    expect(userResult.isSuccess).toBe(true);
+    expect(userResult.isOk()).toBe(true);
   });
 
   it("should fail when firstName is too short", () => {
@@ -27,7 +27,7 @@ describe("User", () => {
       firstName: "J",
     });
 
-    expect(userResult.error).toBe(FirstNameExceptions.TooShort);
+    expect(userResult.unwrapErr()).toBe(FirstNameExceptions.TooShort);
   });
 
   it("should fail when lastName is too short", () => {
@@ -36,7 +36,7 @@ describe("User", () => {
       lastName: "D",
     });
 
-    expect(userResult.error).toBe(LastNameExceptions.TooShort);
+    expect(userResult.unwrapErr()).toBe(LastNameExceptions.TooShort);
   });
 
   it("should fail when email is invalid", () => {
@@ -45,7 +45,7 @@ describe("User", () => {
       email: "invalidEmail",
     });
 
-    expect(userResult.error).toBe(EmailExceptions.IncorrectFormat);
+    expect(userResult.unwrapErr()).toBe(EmailExceptions.IncorrectFormat);
   });
 
   describe("password", () => {
@@ -55,7 +55,7 @@ describe("User", () => {
         password: "123",
       });
 
-      expect(userResult.error).toBe(PasswordExceptions.TooShort);
+      expect(userResult.unwrapErr()).toBe(PasswordExceptions.TooShort);
     });
 
     it("should fail when password doesn't have a number", () => {
@@ -64,7 +64,7 @@ describe("User", () => {
         password: "myComplexPassword!",
       });
 
-      expect(userResult.error).toBe(PasswordExceptions.MustHaveAtLeastOneNumber);
+      expect(userResult.unwrapErr()).toBe(PasswordExceptions.MustHaveAtLeastOneNumber);
     });
 
     it("should fail when password doesn't have an uppercase letter", () => {
@@ -73,7 +73,9 @@ describe("User", () => {
         password: "mycomplexpassword123!",
       });
 
-      expect(userResult.error).toBe(PasswordExceptions.MustHaveAtLeastOneUpperCaseLetter);
+      expect(userResult.unwrapErr()).toBe(
+        PasswordExceptions.MustHaveAtLeastOneUpperCaseLetter
+      );
     });
 
     it("should fail when password doesn't have a lowercase letter", () => {
@@ -82,7 +84,9 @@ describe("User", () => {
         password: "MYCOMPLEXPASSWORD123!",
       });
 
-      expect(userResult.error).toBe(PasswordExceptions.MustHaveAtLeastOneLowerCaseLetter);
+      expect(userResult.unwrapErr()).toBe(
+        PasswordExceptions.MustHaveAtLeastOneLowerCaseLetter
+      );
     });
 
     it("should fail when password doesn't have a special character", () => {
@@ -91,7 +95,7 @@ describe("User", () => {
         password: "MyComplexPassword123",
       });
 
-      expect(userResult.error).toBe(
+      expect(userResult.unwrapErr()).toBe(
         PasswordExceptions.MustHaveAtLeastOneSpecialCharacter
       );
     });

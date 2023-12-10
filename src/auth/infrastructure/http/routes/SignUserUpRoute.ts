@@ -200,18 +200,18 @@ export class SignUserUpRoute {
           lastName: req.body.lastName,
         });
 
-        if (result.isFailure) {
+        if (result.isErr()) {
           return res.status(400).json({
             success: false,
-            exception: result.error,
+            exception: result.unwrapErr(),
           });
         }
 
         return res.status(200).json({
           success: true,
           data: {
-            accessToken: result.value.accessToken,
-            refreshToken: result.value.refreshToken,
+            accessToken: result.unwrap().accessToken,
+            refreshToken: result.unwrap().refreshToken,
           },
         });
       }

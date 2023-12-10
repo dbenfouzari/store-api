@@ -148,12 +148,6 @@ export class GetMeRoute {
         });
 
         return result.match(
-          (exception) => {
-            return res.status(401).json({
-              success: false,
-              exception,
-            });
-          },
           (user) => {
             return res.status(200).json({
               success: true,
@@ -163,6 +157,12 @@ export class GetMeRoute {
                 firstName: user.props.firstName.props.value,
                 lastName: user.props.lastName.props.value,
               },
+            });
+          },
+          (exception) => {
+            return res.status(401).json({
+              success: false,
+              exception,
             });
           }
         );

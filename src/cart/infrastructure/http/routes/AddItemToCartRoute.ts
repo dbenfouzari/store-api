@@ -1,11 +1,12 @@
 import type { AddProductVariantToCartExceptions } from "@cart/application/use-cases/AddProductVariantToCart";
+import type { Option } from "@shared/common/Option";
 
 import { Router } from "express";
 import { inject, injectable } from "tsyringe";
 
 import { AddProductVariantToCart } from "@cart/application/use-cases/AddProductVariantToCart";
 import { CART_TOKENS } from "@cart/di/tokens";
-import { Option } from "@shared/common/Option";
+import { None, Some } from "@shared/common/Option";
 
 export type AddItemToCartRequest = {
   itemId?: string;
@@ -88,9 +89,9 @@ export class AddItemToCartRoute {
         let bodyOption: Option<AddItemToCartRequest>;
 
         if (req.body === undefined || Object.keys(req.body).length === 0) {
-          bodyOption = Option.none();
+          bodyOption = new None();
         } else {
-          bodyOption = Option.some<AddItemToCartRequest>(req.body);
+          bodyOption = Some.of<AddItemToCartRequest>(req.body);
         }
 
         bodyOption.match(
@@ -102,15 +103,15 @@ export class AddItemToCartRoute {
             });
 
             return result.match(
+              () => {
+                res.status(201).json({
+                  success: true,
+                });
+              },
               (result) => {
                 res.status(400).json({
                   success: false,
                   exception: result,
-                });
-              },
-              () => {
-                res.status(201).json({
-                  success: true,
                 });
               }
             );

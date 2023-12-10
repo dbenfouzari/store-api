@@ -1,8 +1,9 @@
 import type { Either } from "@shared/common/Either";
 import type { Option } from "@shared/common/Option";
+import type { Result } from "@shared/common/Result";
 import type { DateTimeExceptions } from "@shared/domain/value-objects/DateTime";
 
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 import { ValueObject } from "@shared/domain/models/ValueObject";
 import { DateTime } from "@shared/domain/value-objects/DateTime";
 
@@ -31,12 +32,12 @@ export class CartCreationDate extends ValueObject<{ value: DateTime }> {
       const result = this.checkDateIsInThePast(dateTimeOrException);
 
       return result.match(
-        (error) => Result.fail(error),
-        (dateTime) => Result.ok(new CartCreationDate({ value: dateTime }))
+        (dateTime) => Ok.of(new CartCreationDate({ value: dateTime })),
+        (error) => Err.of(error)
       );
     }
 
-    return Result.fail(dateTimeOrException);
+    return Err.of(dateTimeOrException);
   }
 
   private static checkDateIsInThePast(
@@ -45,9 +46,9 @@ export class CartCreationDate extends ValueObject<{ value: DateTime }> {
     const isValid = dateTime.isSameOrBefore(DateTime.now());
 
     if (!isValid) {
-      return Result.fail(CartCreationDateExceptions.MustBeInThePast);
+      return Err.of(CartCreationDateExceptions.MustBeInThePast);
     }
 
-    return Result.ok(dateTime);
+    return Ok.of(dateTime);
   }
 }

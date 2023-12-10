@@ -1,19 +1,19 @@
 import { AddProductVariantToCart } from "@cart/application/use-cases/AddProductVariantToCart";
 import { Cart } from "@cart/domain/entities/Cart";
 import { ProductVariant } from "@product/domain/entities/ProductVariant";
-import { Option } from "@shared/common/Option";
+import { None, Some } from "@shared/common/Option";
 
 describe("AddProductVariantToCart", () => {
-  const cart = Option.some(
+  const cart = Some.of(
     Cart.create({
       ownerId: "425fab45-27a2-451a-a506-9b2918658fe1",
-    }).value
+    }).unwrap()
   );
-  const productVariant = Option.some(
+  const productVariant = Some.of(
     ProductVariant.create({
       name: "name",
       price: 10,
-    }).value
+    }).unwrap()
   );
 
   const cartReadRepositoryMock = {
@@ -37,29 +37,29 @@ describe("AddProductVariantToCart", () => {
   it("should return CartNotFound when cart is not found", async () => {
     jest
       .spyOn(cartReadRepositoryMock, "findCartByCartId")
-      .mockReturnValueOnce(Option.none());
+      .mockReturnValueOnce(new None());
 
     const response = await addProductVariantToCart.execute({
       cartId: "cartId",
       productVariantId: "productVariantId",
     });
 
-    expect(response.isFailure).toBe(true);
-    expect(response.error).toBe("AddProductVariantToCartCartNotFound");
+    expect(response.isErr()).toBe(true);
+    expect(response.unwrapErr()).toBe("AddProductVariantToCartCartNotFound");
   });
 
   it("should return ProductVariantNotFound when product variant is not found", async () => {
     jest
       .spyOn(productVariantReadRepositoryMock, "findProductVariantByProductVariantId")
-      .mockReturnValueOnce(Option.none());
+      .mockReturnValueOnce(new None());
 
     const response = await addProductVariantToCart.execute({
       cartId: "cartId",
       productVariantId: "productVariantId",
     });
 
-    expect(response.isFailure).toBe(true);
-    expect(response.error).toBe("AddProductVariantToCartProductVariantNotFound");
+    expect(response.isErr()).toBe(true);
+    expect(response.unwrapErr()).toBe("AddProductVariantToCartProductVariantNotFound");
   });
 
   it("should add product variant to cart", async () => {
@@ -70,7 +70,7 @@ describe("AddProductVariantToCart", () => {
       productVariantId: "productVariantId",
     });
 
-    expect(response.isSuccess).toBe(true);
+    expect(response.isOk()).toBe(true);
     expect(spy).toHaveBeenCalledWith(productVariant.value, 1);
   });
 });

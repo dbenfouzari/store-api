@@ -1,4 +1,6 @@
-import { Option } from "@shared/common/Option";
+import type { Option } from "@shared/common/Option";
+
+import { None, Some } from "@shared/common/Option";
 
 export abstract class Either<L, R> {
   /**
@@ -69,10 +71,10 @@ export abstract class Either<L, R> {
    * @example
    *
    * const left = Left.from("left");
-   * expect(left.left()).toEqual(Option.some("left"));
+   * expect(left.left()).toEqual(Some.of("left"));
    *
    * const right = Right.from("right");
-   * expect(right.left()).toEqual(Option.none());
+   * expect(right.left()).toEqual(new None());
    * @returns The converted value.
    */
   abstract left(): Option<L>;
@@ -149,10 +151,10 @@ export abstract class Either<L, R> {
    * ### Examples
    * @example
    * const left = Left.from("left");
-   * expect(left.right()).toEqual(Option.none());
+   * expect(left.right()).toEqual(new None());
    *
    * const right = Right.from("right");
-   * expect(right.right()).toEqual(Option.some("right"));
+   * expect(right.right()).toEqual(Some.of("right"));
    * @returns The converted value.
    */
   abstract right(): Option<R>;
@@ -214,11 +216,11 @@ export class Left<L, R> extends Either<L, R> {
   }
 
   left(): Option<L> {
-    return Option.some(this.value);
+    return Some.of(this.value);
   }
 
   right(): Option<R> {
-    return Option.none();
+    return new None();
   }
 
   flip(): Either<R, L> {
@@ -276,11 +278,11 @@ export class Right<L, R> extends Either<L, R> {
   }
 
   left(): Option<L> {
-    return Option.none();
+    return new None();
   }
 
   right(): Option<R> {
-    return Option.some(this.value);
+    return Some.of(this.value);
   }
 
   flip(): Either<R, L> {

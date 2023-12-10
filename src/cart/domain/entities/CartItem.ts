@@ -3,9 +3,10 @@ import type {
   ProductVariantExceptions,
 } from "@product/domain/entities/ProductVariant";
 import type { PriceExceptions } from "@product/domain/value-objects/Price";
+import type { Result } from "@shared/common/Result";
 
 import { ProductVariant } from "@product/domain/entities/ProductVariant";
-import { Result } from "@shared/common/Result";
+import { Err, Ok } from "@shared/common/Result";
 import { Entity } from "@shared/domain/models/Entity";
 
 type CartItemProps = {
@@ -48,31 +49,27 @@ export class CartItem extends Entity<CartItemProps> {
     const productVariantResult = ProductVariant.create(props.productVariant);
     const quantityResult = this.validateQuantity(props.quantity ?? 1);
 
-    const result = Result.combine(productVariantResult, quantityResult);
-
-    if (result.isFailure) {
-      return Result.fail(result.error);
-    }
-
-    return Result.ok(
-      new CartItem({
-        productVariant: productVariantResult.value,
-        quantity: props.quantity ?? 1,
-      })
-    );
+    return productVariantResult.andThen((productVariant) => {
+      return quantityResult.map((quantity) => {
+        return new CartItem({
+          productVariant,
+          quantity,
+        });
+      });
+    });
   }
 
   private static validateQuantity(quantity: number): Result<number, CartItemExceptions> {
     if (quantity <= 0) {
-      return Result.fail(CartItemExceptions.QuantityMustBePositive);
+      return Err.of(CartItemExceptions.QuantityMustBePositive);
     }
 
-    return Result.ok(quantity);
+    return Ok.of(quantity);
   }
 
   public addQuantity(quantity: number): Result<void, Error> {
     this.props.quantity += quantity;
 
-    return Result.ok(undefined);
+    return Ok.of(undefined);
   }
 }

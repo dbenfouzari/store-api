@@ -12,7 +12,7 @@ describe("Cart", () => {
 
     const cartResult = Cart.create(props);
 
-    expect(cartResult.isSuccess).toBe(true);
+    expect(cartResult.isOk()).toBe(true);
   });
 
   describe("with all valid props", () => {
@@ -34,11 +34,11 @@ describe("Cart", () => {
     const cartResult = Cart.create(props);
 
     it("should create a cart", () => {
-      expect(cartResult.isSuccess).toBe(true);
+      expect(cartResult.isOk()).toBe(true);
     });
 
     it("should have a creation date", () => {
-      const cart = cartResult.value;
+      const cart = cartResult.unwrap();
       expect(cart.props.createdAt.props.value.toIso8601String()).toBe(
         new DateTime({
           year: 2021,
@@ -49,7 +49,7 @@ describe("Cart", () => {
     });
 
     it("should have an update date", () => {
-      const cart = cartResult.value;
+      const cart = cartResult.unwrap();
       expect(cart.props.updatedAt.props.value.toIso8601String()).toBe(
         new DateTime({
           year: 2023,
@@ -60,12 +60,12 @@ describe("Cart", () => {
     });
 
     it("should have an owner id", () => {
-      const cart = cartResult.value;
+      const cart = cartResult.unwrap();
       expect(cart.props.ownerId.toString()).toBe("425fab45-27a2-451a-a506-9b2918658fe1");
     });
 
     it("should have items", () => {
-      const cart = cartResult.value;
+      const cart = cartResult.unwrap();
       expect(cart.props.items.size).toBe(1);
     });
   });
@@ -82,7 +82,7 @@ describe("Cart", () => {
 
     const cartResult = Cart.create(props);
 
-    expect(cartResult.isSuccess).toBe(true);
+    expect(cartResult.isOk()).toBe(true);
   });
 
   it("should create a cart with an update date as a `DateTime`", () => {
@@ -97,7 +97,7 @@ describe("Cart", () => {
 
     const cartResult = Cart.create(props);
 
-    expect(cartResult.isSuccess).toBe(true);
+    expect(cartResult.isOk()).toBe(true);
   });
 
   describe("with invalid props", () => {
@@ -108,7 +108,7 @@ describe("Cart", () => {
 
       const cartResult = Cart.create(props);
 
-      expect(cartResult.isFailure).toBe(true);
+      expect(cartResult.isErr()).toBe(true);
     });
 
     it("should fail if the creation date is not a valid date", () => {
@@ -119,7 +119,7 @@ describe("Cart", () => {
 
       const cartResult = Cart.create(props);
 
-      expect(cartResult.isFailure).toBe(true);
+      expect(cartResult.isErr()).toBe(true);
     });
 
     it("should fail if the creation date is in the future", () => {
@@ -130,7 +130,7 @@ describe("Cart", () => {
 
       const cartResult = Cart.create(props);
 
-      expect(cartResult.isFailure).toBe(true);
+      expect(cartResult.isErr()).toBe(true);
     });
 
     it("should fail if the update date is not a valid date", () => {
@@ -141,7 +141,7 @@ describe("Cart", () => {
 
       const cartResult = Cart.create(props);
 
-      expect(cartResult.isFailure).toBe(true);
+      expect(cartResult.isErr()).toBe(true);
     });
 
     it("should fail if the update date is in the future", () => {
@@ -152,7 +152,7 @@ describe("Cart", () => {
 
       const cartResult = Cart.create(props);
 
-      expect(cartResult.isFailure).toBe(true);
+      expect(cartResult.isErr()).toBe(true);
     });
 
     it("should fail if one of the items is invalid", () => {
@@ -179,7 +179,7 @@ describe("Cart", () => {
 
       const cartResult = Cart.create(props);
 
-      expect(cartResult.isFailure).toBe(true);
+      expect(cartResult.isErr()).toBe(true);
     });
   });
 });

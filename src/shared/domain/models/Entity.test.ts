@@ -26,7 +26,7 @@ describe("entity", () => {
   });
 
   it("should create an entity with its own ID when given", () => {
-    const id = UniqueEntityId.create("cc464680-f3ba-4748-b92c-dc962824d949").value;
+    const id = UniqueEntityId.create("cc464680-f3ba-4748-b92c-dc962824d949").unwrap();
     const result = new ChildEntity({ hello: "world" }, id);
 
     expect(result.id.toValue()).toBeTruthy();
@@ -35,7 +35,7 @@ describe("entity", () => {
   });
 
   describe("equality comparison", () => {
-    const id = UniqueEntityId.create("cc464680-f3ba-4748-b92c-dc962824d949").value;
+    const id = UniqueEntityId.create("cc464680-f3ba-4748-b92c-dc962824d949").unwrap();
 
     const entity1 = new ChildEntity({ hello: "world" }, id);
     const entity2 = new ChildEntity({ hello: "world" });

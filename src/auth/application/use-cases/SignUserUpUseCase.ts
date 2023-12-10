@@ -2,6 +2,7 @@ import type { EmailExceptions } from "@auth/domain/value-objects/Email";
 import type { FirstNameExceptions } from "@auth/domain/value-objects/FirstName";
 import type { LastNameExceptions } from "@auth/domain/value-objects/LastName";
 import type { PasswordExceptions } from "@auth/domain/value-objects/Password";
+import type { Result } from "@shared/common/Result";
 import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
@@ -11,7 +12,7 @@ import { IUserReadRepository } from "@auth/application/services/IUserReadReposit
 import { IUserWriteRepository } from "@auth/application/services/IUserWriteRepository";
 import { AuthServicesTokens } from "@auth/di/tokens";
 import { User } from "@auth/domain/entities/User";
-import { Result } from "@shared/common/Result";
+import { Ok, Err } from "@shared/common/Result";
 import { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 
 export type SignUserUpRequest = {
@@ -55,33 +56,33 @@ export class SignUserUpUseCase
   async execute(request: SignUserUpRequest): Promise<SignUserUpResponse> {
     const userExistsResult = await this.ensureUserDoesNotExist(request.email);
 
-    if (userExistsResult.isFailure) {
-      return Result.fail(userExistsResult.error);
+    if (userExistsResult.isErr()) {
+      return Err.of(userExistsResult.unwrapErr());
     }
 
     // User does not exist, so create a new user
     const userResult = this.buildUser(request);
 
-    if (userResult.isFailure) {
-      return Result.fail(userResult.error);
+    if (userResult.isErr()) {
+      return Err.of(userResult.unwrapErr());
     }
 
     // Create tokens for the user
     const { accessToken, refreshToken } = this.generateTokens(
-      userResult.value.id.toString(),
-      userResult.value.email,
-      userResult.value.props.refreshToken ?? ""
+      userResult.unwrap().id.toString(),
+      userResult.unwrap().email,
+      userResult.unwrap().props.refreshToken ?? ""
     );
 
     // Save the user and the refresh token to the database
-    const userSaved = await this.userWriteRepository.createUser(userResult.value);
+    const userSaved = await this.userWriteRepository.createUser(userResult.unwrap());
 
-    if (userSaved.isFailure) {
-      return Result.fail(userSaved.error);
+    if (userSaved.isErr()) {
+      return Err.of(userSaved.unwrapErr());
     }
 
     // Return the tokens
-    return Result.ok({
+    return Ok.of({
       accessToken,
       refreshToken,
     });
@@ -93,15 +94,15 @@ export class SignUserUpUseCase
     // If the user already exists, return an error
     const userAlreadyExists = await this.userReadRepository.exists(email);
 
-    if (userAlreadyExists.isFailure) {
-      return Result.fail(userAlreadyExists.error);
+    if (userAlreadyExists.isErr()) {
+      return Err.of(userAlreadyExists.unwrapErr());
     }
 
-    if (userAlreadyExists.value) {
-      return Result.fail(SignUserUpExceptions.UserAlreadyExists);
+    if (userAlreadyExists.unwrap()) {
+      return Err.of(SignUserUpExceptions.UserAlreadyExists);
     }
 
-    return Result.ok(email);
+    return Ok.of(email);
   }
 
   private buildUser(
@@ -110,7 +111,7 @@ export class SignUserUpUseCase
     User,
     EmailExceptions | PasswordExceptions | FirstNameExceptions | LastNameExceptions
   > {
-    const id = UniqueEntityId.create().value;
+    const id = UniqueEntityId.create().unwrap();
 
     const refreshToken = this.jwtService.sign(
       {
@@ -133,11 +134,11 @@ export class SignUserUpUseCase
     );
 
     // If the user could not be created, return an error
-    if (userToCreate.isFailure) {
-      return Result.fail(userToCreate.error);
+    if (userToCreate.isErr()) {
+      return Err.of(userToCreate.unwrapErr());
     }
 
-    return Result.ok(userToCreate.value);
+    return Ok.of(userToCreate.unwrap());
   }
 
   private generateTokens(
