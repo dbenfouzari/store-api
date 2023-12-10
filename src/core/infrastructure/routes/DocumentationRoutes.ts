@@ -101,6 +101,11 @@ export class DocumentationRoutes implements IAppRouterV1 {
         explorer: true,
         customCssUrl:
           "https://cdn.jsdelivr.net/npm/swagger-ui-themes@3.0.1/themes/3.x/theme-flattop.min.css",
+        customSiteTitle: "Store API Documentation",
+        swaggerOptions: {
+          operationsSorter: "alpha",
+          tagsSorter: "alpha",
+        },
       })
     );
   }
