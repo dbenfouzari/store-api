@@ -106,7 +106,7 @@ type GetMeResponse = GetMeSuccessResponse | GetMeErrorResponse;
  * @openapi
  * /auth/me:
  *   get:
- *     tags: [User]
+ *     tags: [Auth]
  *     summary: Get the current user.
  *     security:
  *       - BearerAuth: []
