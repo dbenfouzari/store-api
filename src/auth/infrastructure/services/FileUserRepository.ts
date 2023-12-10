@@ -1,6 +1,7 @@
 import type { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
 import type { IUserWriteRepository } from "@auth/application/services/IUserWriteRepository";
 import type { EmailExceptions } from "@auth/domain/value-objects/Email";
+import type { UserRoles } from "@auth/domain/value-objects/UserRole";
 import type { Option } from "@shared/common/Option";
 import type { Result } from "@shared/common/Result";
 
@@ -20,6 +21,7 @@ type UserJson = {
   lastName: string;
   email: string;
   password: string;
+  role: string;
   refreshToken?: string;
 };
 
@@ -35,6 +37,7 @@ function mapUserToData(user: User): UserJson {
     lastName: user.props.lastName.props.value,
     email: user.props.email.props.value,
     password: user.props.password.props.value,
+    role: user.props.role.props.value,
     refreshToken: user.props.refreshToken,
   };
 }
@@ -100,6 +103,7 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
           lastName: user.lastName,
           email: user.email,
           password: user.password,
+          role: user.role as UserRoles,
           refreshToken: user.refreshToken,
         },
         UniqueEntityId.create(user.id).unwrap()

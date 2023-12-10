@@ -47,6 +47,7 @@ import { Email } from "@auth/domain/value-objects/Email";
 import { FirstName } from "@auth/domain/value-objects/FirstName";
 import { LastName } from "@auth/domain/value-objects/LastName";
 import { Password } from "@auth/domain/value-objects/Password";
+import { UserRole, UserRoles } from "@auth/domain/value-objects/UserRole";
 import { Ok } from "@shared/common/Result";
 import { Entity } from "@shared/domain/models/Entity";
 
@@ -55,6 +56,7 @@ type UserProps = {
   lastName: LastName;
   email: Email;
   password: Password;
+  role: UserRole;
   refreshToken?: string;
 };
 
@@ -63,6 +65,7 @@ export type CreateUserProps = {
   lastName: string;
   email: string;
   password: string;
+  role?: UserRoles;
   refreshToken?: string;
 };
 
@@ -94,51 +97,31 @@ export class User extends Entity<UserProps> {
     const lastNameResult = LastName.create(props.lastName);
     const emailResult = Email.create(props.email);
     const passwordResult = Password.create(props.password);
+    const roleResult = UserRole.create(props.role ?? UserRoles.USER);
 
     return firstNameResult.andThen((firstName) => {
       return lastNameResult.andThen((lastName) => {
         return emailResult.andThen((email) => {
           return passwordResult.andThen((password) => {
-            return Ok.of(
-              new User(
-                {
-                  firstName,
-                  lastName,
-                  email,
-                  password,
-                  refreshToken: props.refreshToken,
-                },
-                id
-              )
-            );
+            return roleResult.andThen((role) => {
+              return Ok.of(
+                new User(
+                  {
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    role,
+                    refreshToken: props.refreshToken,
+                  },
+                  id
+                )
+              );
+            });
           });
         });
       });
     });
-
-    // const result = Result.combine(
-    //   firstNameResult,
-    //   lastNameResult,
-    //   emailResult,
-    //   passwordResult
-    // );
-    //
-    // if (result.isFailure) {
-    //   return Err.of(result.error);
-    // }
-    //
-    // return Ok.of(
-    //   new User(
-    //     {
-    //       firstName: firstNameResult.value,
-    //       lastName: lastNameResult.value,
-    //       email: emailResult.value,
-    //       password: passwordResult.value,
-    //       refreshToken: props.refreshToken,
-    //     },
-    //     id
-    //   )
-    // );
   }
 
   public logOut() {
