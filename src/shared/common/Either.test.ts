@@ -1,5 +1,5 @@
 import { Left, Right } from "@shared/common/Either";
-import { None, Option, Some } from "@shared/common/Option";
+import { None, Some } from "@shared/common/Option";
 
 describe("Either", () => {
   describe("Left", () => {

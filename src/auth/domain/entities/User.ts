@@ -78,14 +78,6 @@ export class User extends Entity<UserProps> {
     return this.props.email.props.value;
   }
 
-  public get firstName() {
-    return this.props.firstName.props.value;
-  }
-
-  public get lastName() {
-    return this.props.lastName.props.value;
-  }
-
   static create(
     props: CreateUserProps,
     id?: UniqueEntityId

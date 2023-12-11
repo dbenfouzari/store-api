@@ -88,6 +88,7 @@ function isObject(t: any): t is Record<string, unknown> {
   if (Array.isArray(t)) return false;
   if (typeof t === "string" || typeof t === "number") return false;
   if (t === null || t === undefined) return false;
+  // noinspection RedundantIfStatementJS
   if (t instanceof Date) return false;
 
   return true;

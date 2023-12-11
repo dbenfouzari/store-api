@@ -1,6 +1,6 @@
 export class OptionCannotGetValueOfNone extends Error {
-  constructor() {
-    super("Cannot get value of none.");
+  constructor(message = "Called `Option.unwrap()` on a `None` value") {
+    super(message);
     this.name = "OptionCannotGetValueOfNone";
   }
 }

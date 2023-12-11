@@ -1,6 +1,8 @@
+// noinspection JSUnusedGlobalSymbols
+
 import type { IJWTService } from "@auth/application/services/IJWTService";
 import type { IUserReadRepository } from "@auth/application/services/IUserReadRepository";
-import type { RequestHandler } from "express";
+import type { RequestHandler, Response } from "express";
 
 import { container } from "tsyringe";
 
@@ -94,10 +96,11 @@ export const ensureUserIsAdmin: RequestHandler = async (req, res, next) => {
 };
 
 /**
- *
- * @param res
+ * Returns an Unauthorized response.
+ * @param res The response.
+ * @returns The response.
  */
-function returnUnauthorized(res: any) {
+function returnUnauthorized<Res extends Response>(res: Res) {
   return res.status(401).json({
     success: false,
     exception: "Unauthorized",

@@ -21,7 +21,7 @@ describe("dateTime", () => {
     });
 
     it("`now` should return today", () => {
-      // Since it uses `Date.now()` and the test can be ran anytime, we have to mock it !
+      // Since it uses `Date.now()` and the test can be run anytime, we have to mock it !
       jest
         .spyOn(Date, "now")
         .mockImplementationOnce(() => new Date(2021, 7, 5).getTime());

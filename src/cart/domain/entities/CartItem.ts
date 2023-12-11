@@ -66,10 +66,4 @@ export class CartItem extends Entity<CartItemProps> {
 
     return Ok.of(quantity);
   }
-
-  public addQuantity(quantity: number): Result<void, Error> {
-    this.props.quantity += quantity;
-
-    return Ok.of(undefined);
-  }
 }

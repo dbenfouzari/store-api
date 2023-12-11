@@ -70,6 +70,7 @@ const _fourDigits = (n: number) => n.toString().padStart(4, "0");
  */
 const _sixDigits = (n: number) => n.toString().padStart(6, "0");
 
+// noinspection JSUnusedGlobalSymbols
 export class DateTime {
   private readonly date: Date;
 

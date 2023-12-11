@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 import type { TokenPayload } from "@auth/application/services/IJWTService";
 import type { User } from "@auth/domain/entities/User";
 

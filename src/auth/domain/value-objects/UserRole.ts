@@ -21,6 +21,7 @@ export class UserRole extends ValueObject<UserRoleProps> {
     return Ok.of(new UserRole({ value: role }));
   }
 
+  // noinspection JSUnusedGlobalSymbols
   public static admin(): UserRole {
     return new UserRole({ value: UserRoles.ADMIN });
   }

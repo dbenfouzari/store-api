@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 import type { Config } from "jest";
 
 import { compilerOptions } from "../tsconfig.json";

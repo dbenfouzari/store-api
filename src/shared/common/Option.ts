@@ -1,7 +1,9 @@
 import type { Result } from "@shared/common/Result";
 
 import { Err, Ok } from "@shared/common/Result";
+import { OptionCannotGetValueOfNone } from "@shared/domain/errors/OptionCannotGetValueOfNone";
 
+// noinspection JSUnusedGlobalSymbols
 abstract class OptionAbstract<T> {
   /**
    * Returns `true` if the option is a **Some** value.
@@ -485,7 +487,7 @@ export class None<T> extends OptionAbstract<T> {
   }
 
   unwrap(): T {
-    throw new Error("Called `Option.unwrap()` on a `None` value");
+    throw new OptionCannotGetValueOfNone();
   }
 
   unwrapOr<U>(defaultValue: U): T | U {

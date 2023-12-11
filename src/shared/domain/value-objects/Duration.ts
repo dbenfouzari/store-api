@@ -41,6 +41,7 @@ function twoDigits(n: number) {
   return n.toString().padStart(2, "0");
 }
 
+// noinspection JSUnusedGlobalSymbols
 export class Duration {
   private readonly _duration: number = 0;
 

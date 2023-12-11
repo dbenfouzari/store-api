@@ -4,6 +4,7 @@ import { None, Some } from "@shared/common/Option";
 import { ResultCannotGetErrorOfSuccess } from "@shared/domain/errors/ResultCannotGetErrorOfSuccess";
 import { ResultCannotGetValueOfFailure } from "@shared/domain/errors/ResultCannotGetValueOfFailure";
 
+// noinspection JSUnusedGlobalSymbols
 abstract class ResultBase<T, E> {
   /**
    * Returns `result` if the result is **Ok**, otherwise returns the **Err** value of `this`.
