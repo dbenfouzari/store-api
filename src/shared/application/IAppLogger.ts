@@ -30,30 +30,34 @@ export enum LoggingLevel {
 
 export interface IAppLogger {
   /**
+   * Get the current logging level.
+   */
+  getLevel(): LoggingLevel;
+  /**
    * The highest logging level. Used for logging errors.
    * Designates very severe error events that will presumably lead the application to abort.
    */
-  error(message: string): void;
+  error(message: string, ...rest: any[]): void;
   /**
    * Designates error events that might still allow the application to continue running.
    * Designates potentially harmful situations.
    * Designates hazardous situations.
    */
-  warn(message: string): void;
+  warn(message: string, ...rest: any[]): void;
   /**
    * Designates informational messages that highlight the progress of the application at coarse-grained level.
    * Designates useful information.
    */
-  info(message: string): void;
+  info(message: string, ...rest: any[]): void;
   /**
    * Designates fine-grained informational events that are most useful to debug an application.
    * Designates lower priority information.
    */
-  debug(message: string): void;
+  debug(message: string, ...rest: any[]): void;
   /**
    * The lowest logging level. Used for logging everything.
    * Designates finer-grained informational events than the DEBUG.
    * Designates very low priority, often extremely verbose, information.
    */
-  trace(message: string): void;
+  trace(message: string, ...rest: any[]): void;
 }

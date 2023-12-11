@@ -10,11 +10,17 @@ import { SharedTokens } from "@shared/di/tokens";
 export class Logger implements IAppLogger {
   private _message: string = "";
 
-  constructor(@inject(SharedTokens.LoggerMode) readonly mode: LoggingLevel) {
-    this.debug(`Logger mode is set to ${mode}`);
+  constructor(@inject(SharedTokens.LoggerMode) readonly mode: LoggingLevel) {}
+
+  /**
+   * Returns the current logging level.
+   * @returns The current logging level.
+   */
+  public getLevel(): LoggingLevel {
+    return this.mode;
   }
 
-  private print(loggingMode: LoggingLevel, message: string): void {
+  private print(loggingMode: LoggingLevel, message: string, ...rest: any[]): void {
     const timestamp = this.getTimestamp();
     const coloredTimestamp = chalk.white(timestamp);
 
@@ -50,7 +56,10 @@ export class Logger implements IAppLogger {
       }
     };
 
-    console.log(`${coloredLevel()(loggingModeWrapped)} ${coloredTimestamp} ${message}`);
+    console.log(
+      `${coloredLevel()(loggingModeWrapped)} ${coloredTimestamp} ${message}`,
+      ...rest
+    );
   }
 
   /**
@@ -58,11 +67,12 @@ export class Logger implements IAppLogger {
    * Designates finer-grained informational events than the DEBUG.
    * Designates very low priority, often extremely verbose, information.
    * @param message The message to log.
+   * @param rest The rest of the arguments.
    */
-  public trace(message: string): void {
+  public trace(message: string, ...rest: any[]): void {
     this._message = message;
     if (this.shouldLogTrace()) {
-      this.print(LoggingLevel.TRACE, this._message);
+      this.print(LoggingLevel.TRACE, this._message, ...rest);
     }
   }
 
@@ -70,11 +80,12 @@ export class Logger implements IAppLogger {
    * Designates fine-grained informational events that are most useful to debug an application.
    * Designates lower priority information.
    * @param message The message to log.
+   * @param rest The rest of the arguments.
    */
-  public debug(message: string): void {
+  public debug(message: string, ...rest: any[]): void {
     this._message = message;
     if (this.shouldLogDebug()) {
-      this.print(LoggingLevel.DEBUG, this._message);
+      this.print(LoggingLevel.DEBUG, this._message, rest);
     }
   }
 
@@ -82,11 +93,12 @@ export class Logger implements IAppLogger {
    * Designates informational messages that highlight the progress of the application at coarse-grained level.
    * Designates useful information.
    * @param message The message to log.
+   * @param rest The rest of the arguments.
    */
-  public info(message: string): void {
+  public info(message: string, ...rest: any[]): void {
     this._message = message;
     if (this.shouldLogLog()) {
-      this.print(LoggingLevel.INFO, this._message);
+      this.print(LoggingLevel.INFO, this._message, ...rest);
     }
   }
 
@@ -95,11 +107,12 @@ export class Logger implements IAppLogger {
    * Designates potentially harmful situations.
    * Designates hazardous situations.
    * @param message The message to log.
+   * @param rest The rest of the arguments.
    */
-  public warn(message: string): void {
+  public warn(message: string, ...rest: any[]): void {
     this._message = message;
     if (this.shouldLogWarn()) {
-      this.print(LoggingLevel.WARN, this._message);
+      this.print(LoggingLevel.WARN, this._message, ...rest);
     }
   }
 
@@ -107,11 +120,12 @@ export class Logger implements IAppLogger {
    * The highest logging level. Used for logging errors.
    * Designates very severe error events that will presumably lead the application to abort.
    * @param message The message to log.
+   * @param rest The rest of the arguments.
    */
-  public error(message: string): void {
+  public error(message: string, ...rest: any[]): void {
     this._message = message;
     if (this.shouldLogError()) {
-      this.print(LoggingLevel.ERROR, this._message);
+      this.print(LoggingLevel.ERROR, this._message, ...rest);
     }
   }
 

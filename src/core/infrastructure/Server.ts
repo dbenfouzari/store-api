@@ -38,6 +38,8 @@ export class Server {
       this.app.use("/api/v1", routerV1.router);
     });
 
+    this.logger.info("Logging level: " + this.logger.getLevel().toString());
+
     this.app.listen(port, () => {
       this.logger.info(`Server is listening on ${host}:${port}`);
     });

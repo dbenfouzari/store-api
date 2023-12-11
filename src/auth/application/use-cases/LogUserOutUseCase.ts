@@ -1,6 +1,6 @@
 import type { EmailExceptions } from "@auth/domain/value-objects/Email";
+import type { IUseCase } from "@shared/application/IUseCase";
 import type { Result } from "@shared/common/Result";
-import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
 

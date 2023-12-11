@@ -8,11 +8,13 @@ import type { Result } from "@shared/common/Result";
 import fs from "fs";
 import path from "path";
 
-import { injectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 
 import { User } from "@auth/domain/entities/User";
+import { IAppLogger } from "@shared/application/IAppLogger";
 import { None, Some } from "@shared/common/Option";
 import { Ok } from "@shared/common/Result";
+import { SharedTokens } from "@shared/di/tokens";
 import { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
 
 type UserJson = {
@@ -47,7 +49,11 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
   // File path is located in the root folder, `data/users.json`
   private readonly filePath = path.join(__dirname, "../../../../data/users.json");
 
+  constructor(@inject(SharedTokens.AppLogger) private readonly logger: IAppLogger) {}
+
   createUser(user: User): Promise<Result<User, Error>> {
+    this.logger.trace("FileUserRepository.createUser.impl", { user });
+
     const users = this.readFile();
     const nextUsers = [...users, user];
 
@@ -59,6 +65,8 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
   }
 
   async exists(email: string): Promise<Result<boolean, EmailExceptions>> {
+    this.logger.trace("FileUserRepository.exists.impl", { email });
+
     const users = this.readFile();
     const user = [...users.values()].find((u) => u.props.email.props.value === email);
     const exists = user !== undefined;
@@ -67,11 +75,15 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
   }
 
   getAllUsers(): Promise<User[]> {
+    this.logger.trace("FileUserRepository.getAllUsers.impl");
+
     const users = this.readFile();
     return Promise.resolve(users);
   }
 
   getUserByEmail(email: string): Promise<Result<Option<User>, EmailExceptions>> {
+    this.logger.trace("FileUserRepository.getUserByEmail.impl", { email });
+
     const users = this.readFile();
     const user = [...users.values()].find((u) => u.props.email.props.value === email);
 
@@ -83,6 +95,8 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
   }
 
   getUserById(id: string): Promise<Option<User>> {
+    this.logger.trace("FileUserRepository.getUserById.impl", { id });
+
     const users = this.readFile();
     const user = users.find((u) => u.id.toString() === id);
 
@@ -112,6 +126,8 @@ export class FileUserRepository implements IUserReadRepository, IUserWriteReposi
   }
 
   updateUser(user: User): Promise<Result<User, Error>> {
+    this.logger.trace("FileUserRepository.updateUser.impl", { user });
+
     const users = this.readFile();
 
     const nextUsers = users.map((u) => {

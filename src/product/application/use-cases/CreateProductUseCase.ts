@@ -5,8 +5,8 @@
 import type { ProductVariantExceptions } from "@product/domain/entities/ProductVariant";
 import type { PriceExceptions } from "@product/domain/value-objects/Price";
 import type { ProductTitleExceptions } from "@product/domain/value-objects/ProductTitle";
+import type { IUseCase } from "@shared/application/IUseCase";
 import type { Result } from "@shared/common/Result";
-import type { IUseCase } from "@shared/domain/models/UseCase";
 
 import { inject, injectable } from "tsyringe";
 
