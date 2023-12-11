@@ -11,7 +11,7 @@ import { injectable } from "tsyringe";
 @injectable()
 export class ExpressLogger implements IRequestLogger {
   logRequest =
-    (options: LogRequestOptions): RequestHandler =>
+    (options: LogRequestOptions = {}): RequestHandler =>
     (req, res, next) => {
       const start = Date.now();
       const method = req.method;
@@ -29,9 +29,24 @@ export class ExpressLogger implements IRequestLogger {
           `${coloredMethod} ${chalk.gray(url)} ${coloredStatusCode} ${coloredTimeElapsed}`
         );
 
-        if (options.logBody) {
+        if (options.logBody && req.body && Object.keys(req.body).length > 0) {
           console.log("↪ Request body:");
           console.table(req.body);
+        }
+
+        if (options.logHeaders && req.headers && Object.keys(req.headers).length > 0) {
+          console.log("↪ Request headers:");
+          console.log(req.headers);
+        }
+
+        if (options.logQuery && req.query && Object.keys(req.query).length > 0) {
+          console.log("↪ Request query:");
+          console.table(req.query);
+        }
+
+        if (options.logParams && req.params && Object.keys(req.params).length > 0) {
+          console.log("↪ Request params:");
+          console.table(req.params);
         }
       });
 

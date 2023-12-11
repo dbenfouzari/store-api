@@ -23,7 +23,14 @@ export class Server {
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(this.requestLogger.logRequest({ logBody: true }));
+    this.app.use(
+      this.requestLogger.logRequest({
+        logBody: true,
+        logHeaders: false,
+        logParams: true,
+        logQuery: true,
+      })
+    );
 
     this.appRouterV1s.forEach((routerV1) => {
       this.app.use("/api/v1", routerV1.router);
