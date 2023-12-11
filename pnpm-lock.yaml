@@ -112,6 +112,9 @@ devDependencies:
   eslint-plugin-prettier:
     specifier: ^5.0.1
     version: 5.0.1(eslint-config-prettier@9.1.0)(eslint@8.55.0)(prettier@3.1.0)
+  eslint-plugin-store:
+    specifier: file:./eslint/eslint-plugin-store
+    version: file:eslint/eslint-plugin-store
   jest:
     specifier: ^29.7.0
     version: 29.7.0(@types/node@20.10.3)(ts-node@10.9.1)
@@ -6162,3 +6165,8 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+
+  file:eslint/eslint-plugin-store:
+    resolution: {directory: eslint/eslint-plugin-store, type: directory}
+    name: eslint-plugin-store
+    dev: true

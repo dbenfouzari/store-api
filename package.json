@@ -39,6 +39,7 @@
     "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-jsdoc": "^46.9.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-store": "file:./eslint/eslint-plugin-store",
     "jest": "^29.7.0",
     "knip": "^3.5.1",
     "prettier": "^3.1.0",

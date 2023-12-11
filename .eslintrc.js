@@ -1,3 +1,5 @@
+const eslintPluginStore = require("./eslint/eslint-plugin-store");
+
 module.exports = {
   env: {
     browser: true,
@@ -24,6 +26,12 @@ module.exports = {
         "jest/no-hooks": "off",
       },
     },
+    {
+      files: "./src/shared/infrastructure/Logger.ts",
+      rules: {
+        "store/prefer-use-logger": "off",
+      },
+    },
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -31,8 +39,9 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.json",
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "store"],
   rules: {
+    "store/prefer-use-logger": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
