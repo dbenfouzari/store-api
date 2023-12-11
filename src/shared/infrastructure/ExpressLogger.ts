@@ -1,3 +1,4 @@
+import type { IAppLogger } from "@shared/application/IAppLogger";
 import type {
   IRequestLogger,
   LogRequestOptions,
@@ -6,10 +7,14 @@ import type { RequestHandler } from "express";
 
 import chalk from "chalk";
 import onFinished from "on-finished";
-import { injectable } from "tsyringe";
+import { container, injectable } from "tsyringe";
+
+import { SharedTokens } from "@shared/di/tokens";
 
 @injectable()
 export class ExpressLogger implements IRequestLogger {
+  private logger = container.resolve<IAppLogger>(SharedTokens.AppLogger);
+
   logRequest =
     (options: LogRequestOptions = {}): RequestHandler =>
     (req, res, next) => {
@@ -25,28 +30,28 @@ export class ExpressLogger implements IRequestLogger {
         const coloredStatusCode = this.getColoredStatusCode(code);
         const coloredTimeElapsed = this.getColoredTimeElapsed(timeElapsed);
 
-        console.log(
+        this.logger.info(
           `${coloredMethod} ${chalk.gray(url)} ${coloredStatusCode} ${coloredTimeElapsed}`
         );
 
         if (options.logBody && req.body && Object.keys(req.body).length > 0) {
-          console.log("↪ Request body:");
-          console.table(req.body);
+          this.logger.debug("↪ Request body:");
+          console.table(req.body); // eslint-disable-line store/prefer-use-logger
         }
 
         if (options.logHeaders && req.headers && Object.keys(req.headers).length > 0) {
-          console.log("↪ Request headers:");
-          console.log(req.headers);
+          this.logger.debug("↪ Request headers:");
+          console.log(req.headers); // eslint-disable-line store/prefer-use-logger
         }
 
         if (options.logQuery && req.query && Object.keys(req.query).length > 0) {
-          console.log("↪ Request query:");
-          console.table(req.query);
+          this.logger.debug("↪ Request query:");
+          console.table(req.query); // eslint-disable-line store/prefer-use-logger
         }
 
         if (options.logParams && req.params && Object.keys(req.params).length > 0) {
-          console.log("↪ Request params:");
-          console.table(req.params);
+          this.logger.debug("↪ Request params:");
+          console.table(req.params); // eslint-disable-line store/prefer-use-logger
         }
       });
 
@@ -57,13 +62,13 @@ export class ExpressLogger implements IRequestLogger {
     switch (method) {
       case "GET":
       default:
-        return chalk.gray.bold(method);
+        return chalk.whiteBright.bold(method);
       case "POST":
-        return chalk.green.bold(method);
+        return chalk.greenBright.bold(method);
       case "PUT":
-        return chalk.yellow.bold(method);
+        return chalk.yellowBright.bold(method);
       case "DELETE":
-        return chalk.red.bold(method);
+        return chalk.redBright.bold(method);
     }
   }
 

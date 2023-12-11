@@ -5,6 +5,7 @@ import { inject, injectable, injectAll } from "tsyringe";
 
 import { IConfigService } from "@application/config/IConfigService";
 import { DI_TOKENS } from "@infrastructure/di/tokens";
+import { IAppLogger } from "@shared/application/IAppLogger";
 import { IRequestLogger } from "@shared/application/IRequestLogger";
 import { SharedTokens } from "@shared/di/tokens";
 
@@ -14,7 +15,8 @@ export class Server {
     @inject(DI_TOKENS.Application) private app: Application,
     @inject(DI_TOKENS.ConfigService) private configService: IConfigService,
     @injectAll(DI_TOKENS.AppRouterV1) private appRouterV1s: IAppRouterV1[],
-    @inject(SharedTokens.RequestLogger) private requestLogger: IRequestLogger
+    @inject(SharedTokens.RequestLogger) private requestLogger: IRequestLogger,
+    @inject(SharedTokens.AppLogger) private logger: IAppLogger
   ) {}
 
   async start() {
@@ -37,7 +39,7 @@ export class Server {
     });
 
     this.app.listen(port, () => {
-      console.log(`Server is listening on ${host}:${port}`);
+      this.logger.info(`Server is listening on ${host}:${port}`);
     });
   }
 }

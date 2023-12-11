@@ -181,9 +181,6 @@ export class Duration {
    * @returns        A new Duration.
    */
   static months(months: number) {
-    console.warn(
-      "Be careful when you work with months. This library does not provide a really good way to handle these values since it's not the same every month, every year."
-    );
     return new Duration({ months });
   }
   /**
@@ -198,9 +195,6 @@ export class Duration {
    * @returns       A new Duration.
    */
   static years(years: number) {
-    console.warn(
-      "Be careful when you work with years. This library does not provide a really good way to handle these values since it's not the same every month, every year."
-    );
     return new Duration({ years });
   }
   //#endregion
