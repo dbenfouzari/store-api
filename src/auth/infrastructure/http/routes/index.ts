@@ -4,11 +4,12 @@ import { Router } from "express";
 import { inject, injectable } from "tsyringe";
 
 import { AuthRoutesTokens } from "@auth/di/tokens";
-import { GetMeRoute } from "@auth/infrastructure/http/routes/GetMeRoute";
-import { LogUserInRoute } from "@auth/infrastructure/http/routes/LogUserInRoute";
-import { LogUserOutRoute } from "@auth/infrastructure/http/routes/LogUserOutRoute";
-import { RefreshUserTokenRoute } from "@auth/infrastructure/http/routes/RefreshUserTokenRoute";
-import { SignUserUpRoute } from "@auth/infrastructure/http/routes/SignUserUpRoute";
+
+import { GetMeRoute } from "./GetMeRoute";
+import { LogUserInRoute } from "./LogUserInRoute";
+import { LogUserOutRoute } from "./LogUserOutRoute";
+import { RefreshUserTokenRoute } from "./RefreshUserTokenRoute";
+import { SignUserUpRoute } from "./SignUserUpRoute";
 
 /**
  * @openapi
