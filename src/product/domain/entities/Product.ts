@@ -1,5 +1,5 @@
 import type { ProductVariantExceptions } from "./ProductVariant";
-import type { ProductNameLengthError } from "@product/domain/errors/ProductNameLengthError";
+import type { ProductTitleExceptions } from "../value-objects/ProductTitle";
 import type { PriceExceptions } from "@product/domain/value-objects/Price";
 import type { Result } from "@shared/common/Result";
 import type { UniqueEntityId } from "@shared/domain/models/UniqueEntityId";
@@ -26,7 +26,7 @@ type CreateProductProps = {
   }[];
 };
 
-type ProductFailure = ProductNameLengthError | ProductVariantExceptions | PriceExceptions;
+type ProductFailure = ProductTitleExceptions | ProductVariantExceptions | PriceExceptions;
 
 export class Product extends Entity<ProductProps> {
   private constructor(props: ProductProps, id?: UniqueEntityId) {

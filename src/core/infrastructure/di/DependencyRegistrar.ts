@@ -10,6 +10,7 @@ import { ConfigService } from "@infrastructure/config/ConfigService";
 import { DI_TOKENS } from "@infrastructure/di/tokens";
 import { DocumentationRoutes } from "@infrastructure/routes/DocumentationRoutes";
 import { HealthCheckRoutes } from "@infrastructure/routes/HealthCheckRoutes";
+import { ProductDependencyRegistrar } from "@product/di/ProductDependencyRegistrar";
 import { InMemoryProductVariantReadRepository } from "@product/infrastructure/services/InMemoryProductVariantReadRepository";
 
 export class DependencyRegistrar {
@@ -35,5 +36,9 @@ export class DependencyRegistrar {
     // Auth dependencies
     const authDependencyRegistrar = new AuthDependencyRegistrar(container);
     authDependencyRegistrar.registerDependencies();
+
+    // Product dependencies
+    const productDependencyRegistrar = new ProductDependencyRegistrar(container);
+    productDependencyRegistrar.registerDependencies();
   }
 }
