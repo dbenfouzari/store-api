@@ -133,7 +133,7 @@ export class CreateProductRoute {
       "/products",
       ensureUserIsAdmin,
       async (
-        request: Request<{}, CreateProductResponse, CreateProductBody>,
+        request: Request<unknown, CreateProductResponse, CreateProductBody>,
         response
       ) => {
         const { name, description } = request.body;
@@ -144,7 +144,7 @@ export class CreateProductRoute {
         });
 
         return result.match(
-          (value) => response.status(201).json({ success: true }),
+          () => response.status(201).json({ success: true }),
           (error) => response.status(400).json({ success: false, exception: error })
         );
       }
