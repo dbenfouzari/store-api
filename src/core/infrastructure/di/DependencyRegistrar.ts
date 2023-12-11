@@ -12,6 +12,7 @@ import { DocumentationRoutes } from "@infrastructure/routes/DocumentationRoutes"
 import { HealthCheckRoutes } from "@infrastructure/routes/HealthCheckRoutes";
 import { ProductDependencyRegistrar } from "@product/di/ProductDependencyRegistrar";
 import { InMemoryProductVariantReadRepository } from "@product/infrastructure/services/InMemoryProductVariantReadRepository";
+import { SharedDependencyRegistrar } from "@shared/di/SharedDependencyRegistrar";
 
 export class DependencyRegistrar {
   public static registerDependencies(): void {
@@ -28,6 +29,10 @@ export class DependencyRegistrar {
     // Register all routes
     container.register(DI_TOKENS.AppRouterV1, { useClass: HealthCheckRoutes });
     container.register(DI_TOKENS.AppRouterV1, { useClass: DocumentationRoutes });
+
+    // Shared dependencies
+    const sharedDependencyRegistrar = new SharedDependencyRegistrar(container);
+    sharedDependencyRegistrar.registerDependencies();
 
     // Cart dependencies
     const cartDependencyRegistrar = new CartDependencyRegistrar(container);

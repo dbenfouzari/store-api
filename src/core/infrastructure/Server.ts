@@ -5,13 +5,16 @@ import { inject, injectable, injectAll } from "tsyringe";
 
 import { IConfigService } from "@application/config/IConfigService";
 import { DI_TOKENS } from "@infrastructure/di/tokens";
+import { IRequestLogger } from "@shared/application/IRequestLogger";
+import { SharedTokens } from "@shared/di/tokens";
 
 @injectable()
 export class Server {
   constructor(
     @inject(DI_TOKENS.Application) private app: Application,
     @inject(DI_TOKENS.ConfigService) private configService: IConfigService,
-    @injectAll(DI_TOKENS.AppRouterV1) private appRouterV1s: IAppRouterV1[]
+    @injectAll(DI_TOKENS.AppRouterV1) private appRouterV1s: IAppRouterV1[],
+    @inject(SharedTokens.RequestLogger) private requestLogger: IRequestLogger
   ) {}
 
   async start() {
@@ -20,6 +23,7 @@ export class Server {
 
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(this.requestLogger.logRequest({ logBody: true }));
 
     this.appRouterV1s.forEach((routerV1) => {
       this.app.use("/api/v1", routerV1.router);
